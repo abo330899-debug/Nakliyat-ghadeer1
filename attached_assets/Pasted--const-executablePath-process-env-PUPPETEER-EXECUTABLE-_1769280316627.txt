@@ -1,0 +1,98 @@
+ابحث عن
+const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || "chromium";
+واستبدله
+
+const { execSync } = require("child_process");
+
+function getChromiumPath() {
+  // لو المستخدم محدده يدويًا — تمام
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
+
+  // جرّب which chromium
+  try {
+    const p = execSync("which chromium", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    if (p) return p;
+  } catch (_) {}
+
+  // جرّب which chromium-browser
+  try {
+    const p = execSync("which chromium-browser", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    if (p) return p;
+  } catch (_) {}
+
+  // جرّب which google-chrome
+  try {
+    const p = execSync("which google-chrome", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+    if (p) return p;
+  } catch (_) {}
+
+  // آخر محاولة: نبحث في nix store (شائع في Replit)
+  try {
+    const p = execSync("ls -1 /nix/store/*-chromium-*/bin/chromium 2>/dev/null | head -n 1", {
+      shell: "/bin/bash",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).toString().trim();
+    if (p) return p;
+  } catch (_) {}
+
+  return null;
+}
+
+أضف CORS (إذا الـFrontend مو بنفس Replit)
+
+إذا صفحتك تشتغل من دومين ثاني (مثلاً static host)، رح يضربك CORS.
+
+أضف هذا أعلى السيرفر (بعد app.use(express.json...))
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+اختبار سريع من المتصفح (بدون Frontend)
+
+افتح رابط Replit وشغّل:
+	•	GET:
+/
+لازم يرجع: OK - PDF API running
+
+⸻
+
+10) اختبار PDF بـ curl (من Shell داخل Replit)
+
+هذا يختبر الـ endpoint بدون مشروعك الأمامي
+
+curl -X POST "http://localhost:3000/api/client-pdf/test" \
+  -H "Content-Type: application/json" \
+  --data '{
+    "clientName":"اختبار",
+    "clientPhone":"07700000000",
+    "totalDriversAll":120,
+    "totalPaymentsAll":30,
+    "totalBalance":90,
+    "receipts":[
+      {
+        "index":1,
+        "name":"وصل 1",
+        "date":"2026-01-24",
+        "previousTotal":0,
+        "driversTotal":120,
+        "paymentsTotal":30,
+        "receiptBalance":90,
+        "runningBalance":90,
+        "drivers":[{"date":"2026-01-24","name":"سائق 1","car":"123","city":"بغداد","amount":120}],
+        "payments":[{"date":"2026-01-24","note":"قبض","amount":30}]
+      }
+    ]
+  }' --output test.pdf
+
+تعديل بسيط بصفحتك (Front-end) على Replit
+
+إذا عندك Frontend على دومين مختلف عن الـAPI، بدل
+
+fetch('/api/client-pdf/' + encodeURIComponent(clientId), ...)
+
+fetch('https://YOUR-REPLIT-URL.repl.co/api/client-pdf/' + encodeURIComponent(clientId), ...)
