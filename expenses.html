@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المصروفات | شركة الغدير للنقل والتخليص الكمركي</title>
+<link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+<style>
+main {
+  flex: 1;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  width: 95%;
+}
+h2 {
+  text-align: center;
+  padding-bottom: 10px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 2px;
+}
+
+.add-expense-form {
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+}
+.add-expense-form h3 {
+  color: var(--accent1);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.add-expense-form input, .add-expense-form select {
+  width: 100%;
+  padding: 10px;
+  margin: .5rem 0;
+  border-radius: var(--radiusSm);
+  border: 1px solid var(--cardBorder);
+  background: var(--glass);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.add-expense-form input:focus, .add-expense-form select:focus {
+  border-color: var(--accent1);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232,178,48,0.12);
+}
+.add-expense-form button {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  border: none;
+  border-radius: var(--radiusSm);
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+  box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+}
+.add-expense-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232,178,48,0.4);
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius);
+  border: 1px solid var(--cardBorder);
+}
+table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+  background: var(--cardBg);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid var(--glass);
+  text-align: center;
+  font-size: 1rem;
+  white-space: nowrap;
+  color: var(--text);
+  font-weight: 800;
+}
+th {
+  background: var(--glass2);
+  color: var(--accent1);
+  font-weight: 900;
+}
+tr:hover { background: var(--glass); }
+
+tr.removing{
+  opacity:0;
+  transform:scale(0.99);
+  transition:opacity .18s ease, transform .18s ease;
+}
+
+.del-btn{
+  background: rgba(255,71,87,0.15);
+  color: var(--red);
+  border: 1px solid rgba(255,71,87,0.3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+}
+.del-btn:hover {
+  background: rgba(255,71,87,0.25);
+}
+
+footer {
+  background: var(--glass);
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid var(--cardBorder);
+  color: var(--textMuted);
+  font-size: .95rem;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:16px;
+}
+.modal.open{display:flex;}
+.modal-box{
+  width:min(460px, 92vw);
+  background: var(--bg2);
+  border-radius: var(--radius);
+  box-shadow:0 18px 50px rgba(0,0,0,0.4);
+  border:1px solid var(--cardBorder);
+  overflow:hidden;
+}
+.modal-head{
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  padding:14px 16px;
+  font-weight:1000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.modal-head button{
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.3);
+  color: var(--bg1);
+  width:34px;height:34px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:1000;
+}
+.modal-body{padding:16px;line-height:1.9;color:var(--text);font-weight:800;white-space:pre-line;}
+.modal-actions{
+  display:flex;
+  gap:10px;
+  padding:14px 16px 16px;
+}
+.modal-actions button{
+  flex:1;
+  height:42px;
+  border-radius:var(--radiusSm);
+  border:none;
+  cursor:pointer;
+  font-weight:1000;
+  transition:.2s;
+  font-family: inherit;
+}
+.btn-no{
+  background: var(--glass2);
+  color: var(--text);
+}
+.btn-no:hover{background: var(--glass);}
+.btn-yes{
+  background: var(--red);
+  color:#fff;
+}
+.btn-yes:hover{filter:brightness(1.1);transform:translateY(-1px);}
+</style>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+    <div class="brand-name">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">الرئيسية</a></li>
+      <li><a href="client.html">العملاء</a></li>
+      <li><a href="client-statement.html">الوصولات</a></li>
+      <li><a href="expenses.html" class="active">المصروفات</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">الرئيسية</a>
+      <a href="client.html">العملاء</a>
+      <a href="client-statement.html">الوصولات</a>
+      <a href="expenses.html">المصروفات</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <h2>إدارة المصروفات</h2>
+
+  <form class="add-expense-form" id="expenseForm">
+    <h3>إضافة مصروف جديد</h3>
+    <input type="text" id="expenseTitle" placeholder="عنوان المصروف" required>
+    <input type="number" id="expenseAmount" placeholder="المبلغ (بالدينار)" required>
+    <select id="expenseCategory">
+      <option value="">اختر التصنيف</option>
+      <option>وقود</option>
+      <option>صيانة</option>
+      <option>إيجار</option>
+      <option>رواتب</option>
+      <option>نثريات</option>
+      <option>أخرى</option>
+    </select>
+    <input type="date" id="expenseDate" required>
+    <button type="submit">حفظ المصروف</button>
+  </form>
+
+  <div class="table-wrap">
+  <table id="expensesTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>العنوان</th>
+        <th>التصنيف</th>
+        <th>المبلغ</th>
+        <th>التاريخ</th>
+        <th>حذف</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  </div>
+</main>
+
+<footer>
+  زاخو – إبراهيم الخليل | 07504084359 | starzeki001@gmail.com  
+  <br>© 2026 شركة الغدير للنقل والتخليص الكمركي – جميع الحقوق محفوظة
+</footer>
+
+<div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div id="confirmTitle">تأكيد الحذف</div>
+      <button type="button" id="confirmClose" aria-label="إغلاق">×</button>
+    </div>
+    <div class="modal-body" id="confirmText"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-no" id="confirmNo">لا</button>
+      <button type="button" class="btn-yes" id="confirmYes">نعم</button>
+    </div>
+  </div>
+</div>
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+let expenses = [];
+
+const modal = document.getElementById("confirmModal");
+const confirmText = document.getElementById("confirmText");
+const btnYes = document.getElementById("confirmYes");
+const btnNo = document.getElementById("confirmNo");
+const btnClose = document.getElementById("confirmClose");
+
+let pendingAction = null;
+
+function openConfirm(message, onYes) {
+  confirmText.textContent = message;
+  pendingAction = onYes;
+  modal.classList.add("open");
+  btnYes.focus();
+}
+
+function closeConfirm() {
+  modal.classList.remove("open");
+  pendingAction = null;
+}
+
+btnNo.addEventListener("click", closeConfirm);
+btnClose.addEventListener("click", closeConfirm);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeConfirm(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeConfirm(); });
+
+btnYes.addEventListener("click", () => {
+  const fn = pendingAction;
+  closeConfirm();
+  if (typeof fn === "function") fn();
+});
+
+function esc(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+async function renderExpenses() {
+  try {
+    expenses = await window.GhadeerDB.getExpensesAsync();
+  } catch(e) {
+    console.error('Error loading expenses:', e);
+    expenses = [];
+  }
+  
+  const tbody = document.querySelector("#expensesTable tbody");
+  tbody.innerHTML = "";
+  expenses.forEach((exp, i) => {
+    const expId = exp.id || i;
+    tbody.innerHTML += `
+      <tr data-id="${expId}">
+        <td>${i+1}</td>
+        <td>${esc(exp.title)}</td>
+        <td>${esc(exp.category) || "-"}</td>
+        <td>${Number(exp.amount || 0).toLocaleString()} د.ع</td>
+        <td>${esc(exp.date)}</td>
+        <td>
+          <button class="del-btn" onclick="event.preventDefault(); requestDelete('${expId}', this)">حذف</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+document.getElementById("expenseForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const title = document.getElementById("expenseTitle").value.trim();
+  const amount = parseFloat(document.getElementById("expenseAmount").value);
+  const category = document.getElementById("expenseCategory").value;
+  const date = document.getElementById("expenseDate").value;
+
+  if (!title || !amount || !date) {
+    alert("الرجاء تعبئة جميع الحقول المطلوبة.");
+    return;
+  }
+
+  try {
+    await window.GhadeerDB.addExpenseAsync({ title, amount, category, date });
+    await renderExpenses();
+    e.target.reset();
+    alert("تمت إضافة المصروف بنجاح.");
+  } catch(err) {
+    alert("خطأ: " + (err?.message || "غير معروف"));
+  }
+});
+
+function requestDelete(expenseId, btnEl) {
+  const exp = expenses.find(x => x.id === expenseId);
+  if (!exp) return;
+
+  const msg =
+    `هل تريد حذف هذا المصروف؟\n\n` +
+    `العنوان: ${exp.title}\n` +
+    `المبلغ: ${Number(exp.amount || 0).toLocaleString()} د.ع\n` +
+    `التاريخ: ${exp.date}`;
+
+  openConfirm(msg, async () => {
+    const row = btnEl?.closest?.("tr");
+    if (row) row.classList.add("removing");
+
+    setTimeout(async () => {
+      try {
+        await window.GhadeerDB.deleteExpenseByIdAsync(expenseId);
+      } catch(e) {
+        console.error('Error deleting expense:', e);
+      }
+      await renderExpenses();
+    }, 180);
+  });
+}
+
+renderExpenses();
+
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+  document.getElementById('mobileMenu')?.classList.toggle('open');
+});
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html" class="active"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
