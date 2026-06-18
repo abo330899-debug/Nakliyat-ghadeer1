@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تسجيل الدخول | شركة الغدير</title>
+<link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+<link rel="apple-touch-icon" href="assets/ghadeer-logo.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<style>
+body {
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(232,178,48,0.1) 0%, transparent 70%);
+  top: -100px;
+  right: -100px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s ease;
+}
+
+.login-header img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(232,178,48,0.5));
+  animation: glow 3s ease-in-out infinite;
+  border-radius: 50%;
+}
+
+.login-header h1 {
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.login-box {
+  background: var(--cardBg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 2rem 2rem;
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.8s ease;
+}
+
+.login-box h2 {
+  color: var(--accent1);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  -webkit-text-fill-color: var(--accent1);
+}
+
+.login-box input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radiusSm);
+  margin: 8px 0;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  background: var(--glass);
+  color: var(--text);
+  transition: 0.3s;
+}
+
+.login-box input::placeholder {
+  color: var(--textMuted);
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: var(--accent1);
+  box-shadow: 0 0 0 3px rgba(232,178,48,0.15);
+  background: var(--glass2);
+}
+
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  border: none;
+  border-radius: var(--radiusSm);
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 1.05rem;
+  font-family: 'Cairo', sans-serif;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 20px rgba(232,178,48,0.3);
+}
+
+.login-box button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(232,178,48,0.5);
+}
+
+.error {
+  color: var(--red2);
+  margin-top: 12px;
+  font-size: 0.9rem;
+  display: none;
+  font-weight: 700;
+}
+
+.login-footer {
+  position: absolute;
+  bottom: 16px;
+  text-align: center;
+  width: 100%;
+  font-size: 0.8rem;
+  color: var(--textMuted);
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-header">
+  <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+  <h1>شركة الغدير للنقل والتخليص الكمركي</h1>
+</div>
+
+<div class="login-box">
+  <h2>تسجيل الدخول</h2>
+  <form onsubmit="event.preventDefault(); login();" autocomplete="on">
+    <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username">
+    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button type="submit">دخول</button>
+  </form>
+  <p class="error" id="error">اسم المستخدم أو كلمة المرور غير صحيحة</p>
+</div>
+
+<div class="login-footer">© 2026 شركة الغدير للنقل والتخليص الكمركي</div>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+function login() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+  const error = document.getElementById("error");
+
+  if (user === "star" && pass === "star") {
+    localStorage.setItem("loggedIn", "true");
+    window.location.href = "home.html";
+  } else {
+    error.style.display = "block";
+    setTimeout(() => error.style.display = "none", 3000);
+  }
+}
+
+if (localStorage.getItem("loggedIn") === "true") {
+  window.location.href = "home.html";
+}
+</script>
+</body>
+</html>
