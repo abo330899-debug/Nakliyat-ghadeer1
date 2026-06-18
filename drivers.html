@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سواق العميل | شركة الغدير للنقل والتخليص الكمركي</title>
+  <link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <style>
+    .app{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 14px;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      min-height: calc(100vh - 80px);
+    }
+    @media (max-width: 1100px){ .app{ grid-template-columns: 1fr; } }
+
+    .side{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      overflow:hidden;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 80px - 28px);
+      display:flex;
+      flex-direction:column;
+    }
+    @media (max-width: 1100px){ .side{ position: relative; height:auto; top:auto; } }
+
+    .sideHead{
+      padding: 14px;
+      border-bottom: 1px solid var(--cardBorder);
+      background: var(--glass);
+    }
+    .brandRow{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:44px; height:44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent1), var(--teal));
+      display:flex; align-items:center; justify-content:center;
+      color: var(--bg1);
+      font-weight:900;
+      font-size: 1.2rem;
+      flex:0 0 auto;
+    }
+    .brandText b{ display:block; font-size:.95rem; font-weight:900; color:var(--accent1); }
+    .brandText span{ display:block; color:var(--textSoft); font-weight:700; font-size:.78rem; margin-top:2px; }
+
+    .pillRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .pill{
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      border-radius: 999px;
+      padding:6px 10px;
+      font-weight:900;
+      font-size:.76rem;
+      color: var(--textSoft);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .pill b{ color: var(--accent1); }
+    .pill.good b{ color: var(--teal); }
+
+    .sideBlock{ padding: 12px 14px; border-bottom: 1px solid var(--cardBorder); }
+    .label{ color: var(--textMuted); font-size:.76rem; font-weight:800; margin-bottom:6px; }
+
+    .field{
+      width:100%;
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      border-radius: var(--radiusSm);
+      height: 40px;
+      padding: 8px 10px;
+      font-weight: 800;
+      outline:none;
+      font-family: inherit;
+    }
+    .field:focus{ border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(232,178,48,0.12); }
+
+    .btnRow{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; padding: 12px 14px; }
+
+    .btn{
+      height: 40px;
+      border-radius: var(--radiusSm);
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      font-weight: 900;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition: 0.3s;
+      font-size: .85rem;
+      font-family: inherit;
+    }
+    .btn:hover{ transform: translateY(-2px); background: var(--glass2); }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+    .btn.danger{
+      background: var(--glass);
+      color: var(--red);
+      border-color: rgba(255,71,87,0.3);
+    }
+
+    .sideFooter{
+      margin-top:auto;
+      padding: 12px 14px;
+      color: var(--textMuted);
+      font-weight: 700;
+      font-size: .74rem;
+      line-height: 1.7;
+      border-top: 1px solid var(--cardBorder);
+      background: var(--glass);
+      text-align: center;
+    }
+
+    .main{ min-width:0; display:flex; flex-direction:column; gap:14px; }
+
+    .topbar{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 14px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap: wrap;
+    }
+
+    .tbTitle{
+      margin:0;
+      font-size: 1.1rem;
+      font-weight: 900;
+      padding-bottom: 6px;
+      display:inline-block;
+      border-bottom: 3px solid var(--accent1);
+    }
+    .tbSub{ margin-top: 8px; color: var(--textSoft); font-size:.82rem; font-weight:700; }
+
+    .summary{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+    @media (max-width: 980px){ .summary{ grid-template-columns: 1fr; } }
+
+    .kpi{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--accent1), var(--teal)); }
+    .kpi .k{ color: var(--textSoft); font-weight:900; font-size:.80rem; }
+    .kpi .v{ font-weight:900; font-size:1rem; color: var(--accent1); }
+    .kpi.good::before{ background: linear-gradient(90deg, var(--teal), var(--teal2)); }
+    .kpi.good .v{ color: var(--teal); }
+    .kpi.warn::before{ background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
+    .kpi.warn .v{ color: var(--accent1); }
+
+    .card{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .cardHead{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+    .cardHead h2{ margin:0; font-size:1rem; font-weight:900; }
+
+    .tableWrap{
+      overflow:auto;
+      border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder);
+      background: var(--glass);
+    }
+    table{ width:100%; border-collapse:collapse; min-width:700px; font-size:.80rem; }
+    th, td{ border-bottom: 1px solid var(--glass); padding:10px; text-align:center; font-weight:800; color:var(--text); }
+    thead th{ position:sticky; top:0; z-index:2; background:var(--glass2); font-size:.76rem; color:var(--accent1); border-bottom: 2px solid var(--cardBorder); }
+    tbody tr:hover{ background: var(--glass); }
+
+    .miniBtn{
+      height:30px; padding:5px 10px; border-radius:8px;
+      border:1px solid var(--cardBorder); background:var(--glass);
+      color:var(--textSoft); font-weight:900; cursor:pointer; font-size:.75rem; font-family:inherit;
+      transition: 0.3s;
+    }
+    .miniBtn:hover{ background:var(--glass2); }
+    .miniBtn.danger{ background:rgba(255,71,87,0.1); color:var(--red); border-color:rgba(255,71,87,0.3); }
+
+    tfoot td{ background:var(--glass2); border-top:2px solid var(--cardBorder); font-weight:900; color:var(--accent1); }
+
+    .watermark{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      font-size:60px; font-weight:900; color:rgba(255,255,255,.02);
+      transform:rotate(-18deg); pointer-events:none; z-index:0;
+    }
+
+    @media print{
+      header.main-header{ display:none !important; }
+      .side{ display:none !important; }
+      button, .btn, .btnRow, .formRow, input, select, .miniBtn{ display:none !important; }
+      body{ background:#fff !important; color:#000 !important; }
+      body::before{ display:none !important; }
+      .app{ display:block !important; padding:0 !important; max-width:100% !important; }
+      .topbar, .kpi, .card, .tableWrap{ box-shadow:none !important; border:1px solid #ccc !important; background:#fff !important; backdrop-filter:none !important; }
+      table{ min-width:0 !important; }
+      thead th{ position:static !important; background:#f5f5f5 !important; color:#000 !important; }
+      td, th, .tbTitle, h1, h2, .kpi .k, .kpi .v { color:#000 !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="main-header">
+    <div class="brand">
+      <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+      <div class="brand-name">
+        <span>شركة الغدير</span>
+        <small>للنقل والتخليص الكمركي</small>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="home.html">الرئيسية</a></li>
+        <li><a href="client.html">العملاء</a></li>
+        <li><a href="client-statement.html">الوصولات</a></li>
+        <li><a href="expenses.html">المصروفات</a></li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="home.html">الرئيسية</a>
+        <a href="client.html">العملاء</a>
+        <a href="client-statement.html">الوصولات</a>
+        <a href="expenses.html">المصروفات</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="watermark">شركة الغدير</div>
+
+  <div class="app">
+    <aside class="side">
+      <div class="sideHead">
+        <div class="brandRow">
+          <div class="logo" id="clientInitial">?</div>
+          <div class="brandText">
+            <b id="sideClientName">اسم العميل</b>
+            <span>سواق شهر 12</span>
+          </div>
+        </div>
+        <div class="pillRow">
+          <div class="pill">التاريخ: <b id="dateNow">—</b></div>
+          <div class="pill good">عدد السواق: <b id="driversCount">0</b></div>
+        </div>
+      </div>
+
+      <div class="sideBlock">
+        <div class="label">إضافة سائق جديد</div>
+        <input id="driverName" class="field" placeholder="اسم السائق" style="margin-bottom:8px;">
+        <input id="driverCar" class="field" placeholder="رقم السيارة" style="margin-bottom:8px;">
+        <input id="driverDate" class="field" placeholder="التاريخ (مثال: 3/12)" style="margin-bottom:8px;">
+        <input id="driverDay" class="field" placeholder="اليوم (مثال: الأربعاء)" style="margin-bottom:8px;">
+        <input id="driverAmount" class="field" type="number" value="1250" placeholder="المبلغ">
+      </div>
+
+      <div class="btnRow">
+        <button class="btn primary" onclick="addDriver()">إضافة سائق</button>
+        <button class="btn" onclick="window.print()">طباعة</button>
+        <button class="btn" onclick="goBack()">رجوع</button>
+        <button class="btn danger" onclick="clearForm()">مسح</button>
+      </div>
+
+      <div class="sideFooter">
+        شركة الغدير للنقل والتخليص الكمركي<br>
+        زاخو – إبراهيم الخليل
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="tbLeft">
+          <h1 class="tbTitle" id="pageTitle">سواق العميل — شهر 12</h1>
+          <div class="tbSub">جدول السواق مع التواريخ والمبالغ</div>
+        </div>
+      </header>
+
+      <div class="summary">
+        <div class="kpi">
+          <div class="k">عدد السواق</div>
+          <div class="v" id="kpiCount">0</div>
+        </div>
+        <div class="kpi good">
+          <div class="k">المجموع الكلي</div>
+          <div class="v" id="kpiTotal">$0</div>
+        </div>
+        <div class="kpi warn">
+          <div class="k">متوسط المبلغ</div>
+          <div class="v" id="kpiAvg">$0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardHead">
+          <h2>جدول السواق</h2>
+        </div>
+        <div class="tableWrap">
+          <table id="tblDrivers">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>اسم السائق</th>
+                <th>رقم السيارة</th>
+                <th>التاريخ</th>
+                <th>اليوم</th>
+                <th>المبلغ</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="driversBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">مجموع السواق</td>
+                <td id="driversTotal">$0</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const clientId = params.get('client') || 'CLIENT-001';
+
+let clientData = null;
+let driversData = [];
+
+function esc(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+document.getElementById('dateNow').textContent = new Date().toLocaleDateString('ar-IQ');
+
+async function loadData() {
+  try {
+    const clientsRes = await fetch('/api/clients');
+    const clients = await clientsRes.json();
+    clientData = clients.find(c => c.id === clientId);
+    
+    if (clientData) {
+      document.getElementById('sideClientName').textContent = clientData.name;
+      document.getElementById('clientInitial').textContent = (clientData.name || '?').charAt(0);
+      document.getElementById('pageTitle').textContent = `سواق — ${clientData.name} — شهر 12`;
+      document.title = `سواق — ${clientData.name} | شركة الغدير`;
+    }
+
+    const driversRes = await fetch(`/api/drivers?client=${encodeURIComponent(clientId)}`);
+    driversData = await driversRes.json();
+    renderDrivers();
+  } catch (e) {
+    console.error('Error loading data:', e);
+  }
+}
+
+function renderDrivers() {
+  const tbody = document.getElementById('driversBody');
+  tbody.innerHTML = '';
+  
+  let total = 0;
+  driversData.forEach((d, i) => {
+    const amount = parseFloat(d.amount) || 0;
+    total += amount;
+    tbody.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${esc(d.name) || '—'}</td>
+        <td>${esc(d.car) || '—'}</td>
+        <td>${esc(d.date) || '—'}</td>
+        <td>${esc(d.day) || '—'}</td>
+        <td>$${amount.toLocaleString()}</td>
+        <td>
+          <button class="miniBtn" onclick="goToReceipt(${i})">تفاصيل</button>
+          <button class="miniBtn danger" onclick="deleteDriver('${d.id}')">حذف</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById('driversTotal').textContent = `$${total.toLocaleString()}`;
+  document.getElementById('driversCount').textContent = driversData.length;
+  document.getElementById('kpiCount').textContent = driversData.length;
+  document.getElementById('kpiTotal').textContent = `$${total.toLocaleString()}`;
+  document.getElementById('kpiAvg').textContent = driversData.length > 0 ? `$${Math.round(total / driversData.length).toLocaleString()}` : '$0';
+}
+
+async function addDriver() {
+  const name = document.getElementById('driverName').value.trim();
+  const car = document.getElementById('driverCar').value.trim();
+  const date = document.getElementById('driverDate').value.trim();
+  const day = document.getElementById('driverDay').value.trim();
+  const amount = parseFloat(document.getElementById('driverAmount').value) || 1250;
+  
+  if (!name) { alert('الرجاء إدخال اسم السائق'); return; }
+  
+  try {
+    const res = await fetch('/api/drivers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId, name, car, date, day, amount })
+    });
+    if (res.ok) {
+      const newDriver = await res.json();
+      driversData.push(newDriver);
+      renderDrivers();
+      clearForm();
+    } else { alert('خطأ في إضافة السائق'); }
+  } catch (e) { console.error('Error:', e); alert('خطأ في الاتصال'); }
+}
+
+async function deleteDriver(driverId) {
+  if (!confirm('هل تريد حذف هذا السائق؟')) return;
+  try {
+    const res = await fetch(`/api/drivers/${driverId}`, { method: 'DELETE' });
+    if (res.ok) { driversData = driversData.filter(d => d.id !== driverId); renderDrivers(); }
+  } catch (e) { console.error('Error:', e); }
+}
+
+function clearForm() {
+  document.getElementById('driverName').value = '';
+  document.getElementById('driverCar').value = '';
+  document.getElementById('driverDate').value = '';
+  document.getElementById('driverDay').value = '';
+  document.getElementById('driverAmount').value = '1250';
+}
+
+function goBack() { window.location.href = `client-statement.html?client=${encodeURIComponent(clientId)}`; }
+function goToReceipt(i) { window.location.href = `client-statement.html?client=${encodeURIComponent(clientId)}`; }
+
+loadData();
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+  document.getElementById('mobileMenu')?.classList.toggle('open');
+});
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
