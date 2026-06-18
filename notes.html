@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الملاحظات والحالات | شركة الغدير للنقل والتخليص الكمركي</title>
+<link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+<style>
+main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  width: 95%;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 12px 28px;
+  border: 1px solid var(--cardBorder);
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.3s;
+  background: var(--glass);
+  color: var(--textSoft);
+  font-family: inherit;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+}
+.tab-btn:hover:not(.active) {
+  background: var(--glass2);
+  color: var(--accent1);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+h2 {
+  text-align: center;
+  padding-bottom: 10px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 2px;
+}
+
+.add-form {
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+}
+.add-form h3 {
+  color: var(--accent1);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.add-form input, .add-form select, .add-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: .5rem 0;
+  border-radius: var(--radiusSm);
+  border: 1px solid var(--cardBorder);
+  background: var(--glass);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.add-form input:focus, .add-form select:focus, .add-form textarea:focus {
+  border-color: var(--accent1);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(232,178,48,0.12);
+}
+.add-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.add-form button {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  border: none;
+  border-radius: var(--radiusSm);
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+  box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+}
+.add-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232,178,48,0.4);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  transition: 0.3s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(232,178,48,0.2);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--accent1);
+  margin: 0;
+}
+.card-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--cardBorder);
+}
+.badge-high { background: rgba(255,71,87,0.15); color: var(--red); border-color: rgba(255,71,87,0.3); }
+.badge-normal { background: rgba(52,152,219,0.15); color: var(--blue2); border-color: rgba(52,152,219,0.3); }
+.badge-low { background: rgba(0,209,178,0.15); color: var(--teal); border-color: rgba(0,209,178,0.3); }
+.badge-pending { background: rgba(232,178,48,0.15); color: var(--accent1); border-color: rgba(232,178,48,0.3); }
+.badge-progress { background: rgba(52,152,219,0.15); color: var(--blue2); border-color: rgba(52,152,219,0.3); }
+.badge-done { background: rgba(0,209,178,0.15); color: var(--teal); border-color: rgba(0,209,178,0.3); }
+.badge-cancelled { background: var(--glass); color: var(--textMuted); }
+
+.card-content {
+  color: var(--textSoft);
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+.card-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--textMuted);
+}
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 1rem;
+}
+.card-actions button {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radiusSm);
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+}
+.btn-edit {
+  background: rgba(52,152,219,0.1);
+  color: var(--blue2);
+  border-color: rgba(52,152,219,0.3);
+}
+.btn-delete {
+  background: rgba(255,71,87,0.1);
+  color: var(--red);
+  border-color: rgba(255,71,87,0.3);
+}
+.btn-edit:hover { background: rgba(52,152,219,0.2); }
+.btn-delete:hover { background: rgba(255,71,87,0.2); }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--textMuted);
+  font-size: 1.1rem;
+}
+
+footer {
+  background: var(--glass);
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid var(--cardBorder);
+  color: var(--textMuted);
+  font-size: .95rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal.open { display: flex; }
+.modal-box {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  max-width: 500px;
+  width: 100%;
+  padding: 1.5rem;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.4);
+  border: 1px solid var(--cardBorder);
+}
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--accent1);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--textMuted);
+}
+.modal-body input, .modal-body select, .modal-body textarea {
+  width: 100%;
+  padding: 10px;
+  margin: .5rem 0;
+  border-radius: var(--radiusSm);
+  border: 1px solid var(--cardBorder);
+  background: var(--glass);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.modal-body textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+}
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radiusSm);
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+}
+.btn-save {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+}
+.btn-cancel {
+  background: var(--glass2);
+  color: var(--text);
+}
+</style>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+    <div class="brand-name">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">الرئيسية</a></li>
+      <li><a href="client.html">العملاء</a></li>
+      <li><a href="client-statement.html">الوصولات</a></li>
+      <li><a href="expenses.html">المصروفات</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">الرئيسية</a>
+      <a href="client.html">العملاء</a>
+      <a href="client-statement.html">الوصولات</a>
+      <a href="expenses.html">المصروفات</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="notes">الملاحظات</button>
+    <button class="tab-btn" data-tab="statuses">الحالات</button>
+  </div>
+
+  <div id="notes" class="tab-content active">
+    <h2>إدارة الملاحظات</h2>
+    
+    <div class="add-form">
+      <h3>إضافة ملاحظة جديدة</h3>
+      <form id="noteForm">
+        <input type="text" id="noteTitle" placeholder="عنوان الملاحظة" required>
+        <textarea id="noteContent" placeholder="محتوى الملاحظة..."></textarea>
+        <select id="noteCategory">
+          <option value="">اختر التصنيف</option>
+          <option value="عام">عام</option>
+          <option value="عملاء">عملاء</option>
+          <option value="شحنات">شحنات</option>
+          <option value="مالي">مالي</option>
+          <option value="إداري">إداري</option>
+        </select>
+        <select id="notePriority">
+          <option value="normal">أولوية عادية</option>
+          <option value="high">أولوية عالية</option>
+          <option value="low">أولوية منخفضة</option>
+        </select>
+        <button type="submit">حفظ الملاحظة</button>
+      </form>
+    </div>
+
+    <div id="notesList" class="cards-grid"></div>
+  </div>
+
+  <div id="statuses" class="tab-content">
+    <h2>إدارة الحالات</h2>
+    
+    <div class="add-form">
+      <h3>إضافة حالة جديدة</h3>
+      <form id="statusForm">
+        <input type="text" id="statusTitle" placeholder="عنوان الحالة" required>
+        <textarea id="statusDescription" placeholder="وصف الحالة..."></textarea>
+        <input type="text" id="statusClientId" placeholder="رقم العميل (اختياري)">
+        <input type="date" id="statusDate">
+        <select id="statusType">
+          <option value="pending">قيد الانتظار</option>
+          <option value="progress">قيد التنفيذ</option>
+          <option value="done">مكتمل</option>
+          <option value="cancelled">ملغي</option>
+        </select>
+        <button type="submit">حفظ الحالة</button>
+      </form>
+    </div>
+
+    <div id="statusesList" class="cards-grid"></div>
+  </div>
+</main>
+
+<footer>
+  زاخو – إبراهيم الخليل | 07504084359 | starzeki001@gmail.com  
+  <br>© 2026 شركة الغدير للنقل والتخليص الكمركي – جميع الحقوق محفوظة
+</footer>
+
+<div class="modal" id="editModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span id="modalTitle">تعديل</span>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modalCancel">إلغاء</button>
+      <button class="btn-save" id="modalSave">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+let notes = [];
+let statuses = [];
+let editingItem = null;
+let editingType = null;
+
+function esc(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+const modal = document.getElementById('editModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const modalClose = document.getElementById('modalClose');
+const modalCancel = document.getElementById('modalCancel');
+const modalSave = document.getElementById('modalSave');
+
+function closeModal() {
+  modal.classList.remove('open');
+  editingItem = null;
+  editingType = null;
+}
+modalClose.addEventListener('click', closeModal);
+modalCancel.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+function getPriorityBadge(priority) {
+  const badges = {
+    high: '<span class="card-badge badge-high">عالية</span>',
+    normal: '<span class="card-badge badge-normal">عادية</span>',
+    low: '<span class="card-badge badge-low">منخفضة</span>'
+  };
+  return badges[priority] || badges.normal;
+}
+
+function getStatusBadge(statusType) {
+  const badges = {
+    pending: '<span class="card-badge badge-pending">قيد الانتظار</span>',
+    progress: '<span class="card-badge badge-progress">قيد التنفيذ</span>',
+    done: '<span class="card-badge badge-done">مكتمل</span>',
+    cancelled: '<span class="card-badge badge-cancelled">ملغي</span>'
+  };
+  return badges[statusType] || badges.pending;
+}
+
+async function loadNotes() {
+  try {
+    notes = await window.GhadeerDB.getNotesAsync();
+  } catch(e) {
+    console.error('Error loading notes:', e);
+    notes = [];
+  }
+  renderNotes();
+}
+
+function renderNotes() {
+  const container = document.getElementById('notesList');
+  if (!notes.length) {
+    container.innerHTML = '<div class="empty-state">لا توجد ملاحظات حتى الآن</div>';
+    return;
+  }
+  container.innerHTML = notes.map(note => `
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">${esc(note.title)}</h4>
+        ${getPriorityBadge(note.priority)}
+      </div>
+      <div class="card-content">${esc(note.content) || '—'}</div>
+      <div class="card-meta">
+        ${note.category ? `<span>${esc(note.category)}</span>` : ''}
+        <span>${new Date(note.createdAt).toLocaleDateString('ar-IQ')}</span>
+      </div>
+      <div class="card-actions">
+        <button class="btn-edit" onclick="editNote('${note.id}')">تعديل</button>
+        <button class="btn-delete" onclick="deleteNote('${note.id}')">حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function loadStatuses() {
+  try {
+    statuses = await window.GhadeerDB.getStatusesAsync();
+  } catch(e) {
+    console.error('Error loading statuses:', e);
+    statuses = [];
+  }
+  renderStatuses();
+}
+
+function renderStatuses() {
+  const container = document.getElementById('statusesList');
+  if (!statuses.length) {
+    container.innerHTML = '<div class="empty-state">لا توجد حالات حتى الآن</div>';
+    return;
+  }
+  container.innerHTML = statuses.map(status => `
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">${esc(status.title)}</h4>
+        ${getStatusBadge(status.statusType)}
+      </div>
+      <div class="card-content">${esc(status.description) || '—'}</div>
+      <div class="card-meta">
+        ${status.clientId ? `<span>${esc(status.clientId)}</span>` : ''}
+        ${status.date ? `<span>${esc(status.date)}</span>` : ''}
+      </div>
+      <div class="card-actions">
+        <button class="btn-edit" onclick="editStatus('${status.id}')">تعديل</button>
+        <button class="btn-delete" onclick="deleteStatus('${status.id}')">حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('noteForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const title = document.getElementById('noteTitle').value.trim();
+  const content = document.getElementById('noteContent').value.trim();
+  const category = document.getElementById('noteCategory').value;
+  const priority = document.getElementById('notePriority').value;
+
+  if (!title) {
+    alert('الرجاء إدخال عنوان الملاحظة');
+    return;
+  }
+
+  try {
+    await window.GhadeerDB.addNoteAsync({ title, content, category, priority });
+    e.target.reset();
+    await loadNotes();
+    alert('تمت إضافة الملاحظة بنجاح');
+  } catch(err) {
+    alert('خطأ: ' + (err?.message || 'غير معروف'));
+  }
+});
+
+document.getElementById('statusForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const title = document.getElementById('statusTitle').value.trim();
+  const description = document.getElementById('statusDescription').value.trim();
+  const clientId = document.getElementById('statusClientId').value.trim();
+  const date = document.getElementById('statusDate').value;
+  const statusType = document.getElementById('statusType').value;
+
+  if (!title) {
+    alert('الرجاء إدخال عنوان الحالة');
+    return;
+  }
+
+  try {
+    await window.GhadeerDB.addStatusAsync({ title, description, statusType, clientId, date });
+    e.target.reset();
+    await loadStatuses();
+    alert('تمت إضافة الحالة بنجاح');
+  } catch(err) {
+    alert('خطأ: ' + (err?.message || 'غير معروف'));
+  }
+});
+
+function editNote(noteId) {
+  const note = notes.find(n => n.id === noteId);
+  if (!note) return;
+  
+  editingItem = note;
+  editingType = 'note';
+  modalTitle.textContent = 'تعديل الملاحظة';
+  modalBody.innerHTML = `
+    <input type="text" id="editNoteTitle" value="${esc(note.title)}" placeholder="عنوان الملاحظة">
+    <textarea id="editNoteContent" placeholder="محتوى الملاحظة">${esc(note.content)}</textarea>
+    <select id="editNoteCategory">
+      <option value="">اختر التصنيف</option>
+      <option value="عام" ${note.category === 'عام' ? 'selected' : ''}>عام</option>
+      <option value="عملاء" ${note.category === 'عملاء' ? 'selected' : ''}>عملاء</option>
+      <option value="شحنات" ${note.category === 'شحنات' ? 'selected' : ''}>شحنات</option>
+      <option value="مالي" ${note.category === 'مالي' ? 'selected' : ''}>مالي</option>
+      <option value="إداري" ${note.category === 'إداري' ? 'selected' : ''}>إداري</option>
+    </select>
+    <select id="editNotePriority">
+      <option value="normal" ${note.priority === 'normal' ? 'selected' : ''}>أولوية عادية</option>
+      <option value="high" ${note.priority === 'high' ? 'selected' : ''}>أولوية عالية</option>
+      <option value="low" ${note.priority === 'low' ? 'selected' : ''}>أولوية منخفضة</option>
+    </select>
+  `;
+  modal.classList.add('open');
+}
+
+function editStatus(statusId) {
+  const status = statuses.find(s => s.id === statusId);
+  if (!status) return;
+  
+  editingItem = status;
+  editingType = 'status';
+  modalTitle.textContent = 'تعديل الحالة';
+  modalBody.innerHTML = `
+    <input type="text" id="editStatusTitle" value="${esc(status.title)}" placeholder="عنوان الحالة">
+    <textarea id="editStatusDescription" placeholder="وصف الحالة">${esc(status.description)}</textarea>
+    <input type="text" id="editStatusClientId" value="${esc(status.clientId)}" placeholder="رقم العميل">
+    <input type="date" id="editStatusDate" value="${esc(status.date)}">
+    <select id="editStatusType">
+      <option value="pending" ${status.statusType === 'pending' ? 'selected' : ''}>قيد الانتظار</option>
+      <option value="progress" ${status.statusType === 'progress' ? 'selected' : ''}>قيد التنفيذ</option>
+      <option value="done" ${status.statusType === 'done' ? 'selected' : ''}>مكتمل</option>
+      <option value="cancelled" ${status.statusType === 'cancelled' ? 'selected' : ''}>ملغي</option>
+    </select>
+  `;
+  modal.classList.add('open');
+}
+
+modalSave.addEventListener('click', async () => {
+  if (!editingItem || !editingType) return;
+
+  try {
+    if (editingType === 'note') {
+      const data = {
+        title: document.getElementById('editNoteTitle').value.trim(),
+        content: document.getElementById('editNoteContent').value.trim(),
+        category: document.getElementById('editNoteCategory').value,
+        priority: document.getElementById('editNotePriority').value
+      };
+      await window.GhadeerDB.updateNoteAsync(editingItem.id, data);
+      await loadNotes();
+    } else {
+      const data = {
+        title: document.getElementById('editStatusTitle').value.trim(),
+        description: document.getElementById('editStatusDescription').value.trim(),
+        clientId: document.getElementById('editStatusClientId').value.trim(),
+        date: document.getElementById('editStatusDate').value,
+        statusType: document.getElementById('editStatusType').value
+      };
+      await window.GhadeerDB.updateStatusAsync(editingItem.id, data);
+      await loadStatuses();
+    }
+    closeModal();
+    alert('تم الحفظ بنجاح');
+  } catch(err) {
+    alert('خطأ: ' + (err?.message || 'غير معروف'));
+  }
+});
+
+async function deleteNote(noteId) {
+  if (!confirm('هل أنت متأكد من حذف هذه الملاحظة؟')) return;
+  try {
+    await window.GhadeerDB.deleteNoteByIdAsync(noteId);
+    await loadNotes();
+  } catch(e) {
+    alert('خطأ أثناء الحذف');
+  }
+}
+
+async function deleteStatus(statusId) {
+  if (!confirm('هل أنت متأكد من حذف هذه الحالة؟')) return;
+  try {
+    await window.GhadeerDB.deleteStatusByIdAsync(statusId);
+    await loadStatuses();
+  } catch(e) {
+    alert('خطأ أثناء الحذف');
+  }
+}
+
+loadNotes();
+loadStatuses();
+
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+  document.getElementById('mobileMenu')?.classList.toggle('open');
+});
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html" class="active"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
