@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نظام حسابات — كشف حساب دفوعات سعيد</title>
+
+  <!-- خط Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --blue:#004b95;
+      --blueDark:#003366;
+      --gold:#c2a356;
+      --gold2:#fcd670;
+      --green:#008d5f;
+
+      --bg1:#f7faff;
+      --bg2:#eef5ff;
+
+      --text:#000;
+      --muted:#666;
+
+      --card:#fff;
+      --line:#e9eef7;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadowHover: 0 8px 25px rgba(0,75,149,0.2);
+      --r:18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{
+      height:100%;
+      margin:0;
+      padding:0;
+      font-family:"Cairo", sans-serif;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    /* ================== Header (الغدير) ================== */
+    header.site-header{
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: linear-gradient(90deg,var(--blueDark),var(--blue));
+      color: #fff;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width: 220px;
+    }
+    .brand img{
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+    }
+    .brand-name span{
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+    .brand-name small{
+      color: #f8e9b3;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    nav.topnav{ position: relative; }
+    nav.topnav ul{
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      align-items:center;
+    }
+    nav.topnav a{
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: 0.3s;
+      white-space:nowrap;
+    }
+    nav.topnav a:hover{ color: var(--gold2); }
+
+    /* Mobile Menu */
+    .menu-toggle{
+      display: none;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .mobile-menu{
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      z-index: 1000;
+      padding: 10px 0;
+      overflow:hidden;
+    }
+    .mobile-menu.open{ display:block; }
+    .mobile-menu a{
+      display:block;
+      padding: 12px 20px;
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 800;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .mobile-menu a:last-child{ border-bottom:none; }
+    .mobile-menu a:hover{ background:#f5f8ff; }
+
+    @media (max-width: 768px){
+      header.site-header{
+        flex-wrap: wrap;
+        padding: 0.8rem 1rem;
+        gap: 10px;
+      }
+      .brand img{ width: 50px; height: 50px; }
+      .brand-name span{ font-size: 1.1rem; }
+      .brand-name small{ font-size: 0.8rem; }
+      nav.topnav ul{ display:none; }
+      .menu-toggle{ display:block; }
+    }
+
+    /* ========= App Layout ========= */
+    .app{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 14px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+      min-height: calc(100vh - 110px);
+    }
+    @media (max-width: 1100px){
+      .app{ grid-template-columns: 1fr; }
+    }
+
+    /* ========= Sidebar ========= */
+    .side{
+      background: var(--card);
+      border-radius: var(--r);
+      border-top: 4px solid var(--blue);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position: sticky;
+      top: 110px; /* حتى ما يصعد تحت الهيدر */
+      height: calc(100vh - 110px - 28px);
+      display:flex;
+      flex-direction:column;
+    }
+    @media (max-width: 1100px){
+      .side{ position: relative; height:auto; top:auto; }
+    }
+
+    .sideHead{
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(0,75,149,0.06), rgba(0,141,95,0.05));
+    }
+
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:44px; height:44px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      font-weight:900;
+      user-select:none;
+      flex:0 0 auto;
+      box-shadow: 0 8px 18px rgba(0,75,149,.18);
+    }
+    .brandText b{
+      display:block;
+      font-size: .98rem;
+      font-weight: 900;
+      color: var(--blue);
+    }
+    .brandText span{
+      display:block;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .80rem;
+      margin-top:2px;
+    }
+
+    .pillRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background: #f5f8ff;
+      border-radius: 999px;
+      padding:6px 10px;
+      font-weight:900;
+      font-size:.78rem;
+      color: #0b2b55;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .pill b{ color: var(--blue); }
+    .pill.good b{ color: var(--green); }
+
+    .sideBlock{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .label{
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    /* ========= Inputs/Selects/Buttons ========= */
+    .field, .smallField{
+      width:100%;
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 12px;
+      height: 40px;
+      padding: 8px 10px;
+      font-weight: 800;
+      outline:none;
+    }
+    .smallField{ height:38px; min-width: 220px; }
+    @media (max-width: 520px){ .smallField{ min-width:100%; } }
+
+    .field:focus, .smallField:focus{
+      border-color: rgba(0,75,149,.45);
+      box-shadow: 0 0 0 3px rgba(0,75,149,.12);
+    }
+
+    .btnRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      padding: 12px 14px;
+    }
+    @media (max-width: 420px){ .btnRow{ grid-template-columns: 1fr; } }
+
+    .btn{
+      height: 42px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 900;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      user-select:none;
+      transition: 0.2s;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    .btn:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,75,149,0.12);
+      border-color: rgba(0,75,149,0.18);
+    }
+    .btn.primary{
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      color:#fff;
+      border-color: transparent;
+    }
+    .btn.danger{
+      background: #fff5f5;
+      color: #b42318;
+      border-color: #ffd7d7;
+    }
+
+    .sideFooter{
+      margin-top:auto;
+      padding: 12px 14px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: .78rem;
+      line-height: 1.7;
+      border-top: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    /* ========= Main ========= */
+    .main{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .topbar{
+      background: var(--card);
+      border-radius: var(--r);
+      border-top: 4px solid var(--blue);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      overflow:hidden;
+    }
+    @media (max-width: 980px){
+      .topbar{ flex-wrap:wrap; }
+      .tbRight{ width:100% !important; min-width:0 !important; }
+    }
+    .tbTitle{
+      margin:0;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--blue);
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 6px;
+      display:inline-block;
+    }
+    .tbSub{
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .tbRight{
+      min-width: 320px;
+      display:grid;
+      gap:8px;
+    }
+    .tbRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: #f5f8ff;
+      align-items:center;
+    }
+    .tbRow span{
+      color: var(--muted);
+      font-weight: 900;
+      font-size: .78rem;
+    }
+    .tbRow b{ font-weight: 900; }
+    [contenteditable="true"]:focus{
+      border-radius: 10px;
+      box-shadow: 0 0 0 3px rgba(0,75,149,.12) inset;
+      background: rgba(0,75,149,.06);
+      outline:none;
+    }
+
+    /* Tabs */
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+    .tab{
+      border:1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: .82rem;
+      cursor:pointer;
+      user-select:none;
+      transition: .2s;
+    }
+    .tab:hover{ background:#f5f8ff; }
+    .tab.active{
+      border-color: rgba(0,75,149,.35);
+      background: rgba(0,75,149,.10);
+    }
+
+    /* KPI cards */
+    .summary{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 980px){ .summary{ grid-template-columns: 1fr; } }
+
+    .kpi{
+      background: var(--card);
+      border-radius: var(--r);
+      border-top: 4px solid var(--blue);
+      box-shadow: var(--shadow);
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      min-width:0;
+    }
+    .kpi .k{
+      color: var(--muted);
+      font-weight: 900;
+      font-size: .82rem;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .kpi .v{
+      font-weight: 900;
+      font-size: 1.05rem;
+      white-space:nowrap;
+      color: var(--blue);
+    }
+    .kpi.warn .v{ color: #b08000; }
+    .kpi.good .v{ color: var(--green); }
+
+    /* Generic card */
+    .card{
+      background: var(--card);
+      border-radius: var(--r);
+      border-top: 4px solid var(--blue);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      min-width:0;
+    }
+    .card:hover{ box-shadow: var(--shadowHover); }
+
+    .cardHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--blue);
+    }
+    .tools{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* Table */
+    .tableWrap{
+      overflow:auto;
+      border-radius: var(--r);
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      font-size: .82rem;
+    }
+    th, td{
+      border-bottom: 1px solid var(--line);
+      padding: 10px 10px;
+      text-align:center;
+      white-space:nowrap;
+      font-weight: 800;
+      color: var(--text);
+    }
+    thead th{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f5f8ff;
+      border-bottom: 1px solid var(--line);
+      font-size: .78rem;
+      color: #0b2b55;
+    }
+    tbody tr:nth-child(odd){ background: #fcfdff; }
+    tbody tr:hover{ background: rgba(0,75,149,.06); }
+
+    td[contenteditable="true"]{ outline:none; border-radius: 10px; }
+    td[contenteditable="true"]:focus{
+      box-shadow: 0 0 0 3px rgba(0,75,149,.12) inset;
+      background: rgba(0,75,149,.06);
+    }
+
+    .miniBtn{
+      height:32px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--blue);
+      font-weight: 900;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .miniBtn:hover{ background:#f5f8ff; }
+    .miniBtn.danger{
+      background:#fff5f5;
+      color:#b42318;
+      border-color:#ffd7d7;
+    }
+
+    tfoot td{
+      background: rgba(194,163,86,.12);
+      border-top: 1px solid rgba(194,163,86,.35);
+      font-weight: 900;
+    }
+
+    /* Forms row */
+    .formRow{
+      display:grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap:10px;
+      margin-top:10px;
+      align-items:center;
+    }
+    .formRow.small{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 1100px){
+      .formRow, .formRow.small{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px){
+      .formRow, .formRow.small{ grid-template-columns: 1fr; }
+    }
+
+    /* Sections toggle */
+    .section{ display:none; }
+    .section.active{ display:block; }
+
+    /* Watermark */
+    .watermark{
+      position: fixed;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 70px;
+      font-weight: 900;
+      color: rgba(0,0,0,.05);
+      transform: rotate(-18deg);
+      pointer-events:none;
+      user-select:none;
+      z-index: 0;
+    }
+
+    /* ================= PRINT (المهم) ================= */
+    @media print{
+      /* نخفي هيدر الموقع */
+      header.site-header{ display:none !important; }
+
+      /* نخفي السايدبار بالكامل */
+      .side{ display:none !important; }
+
+      /* نخفي كل الأزرار/الفورم/البحث/التبويبات */
+      button, .btn, .btnRow, .tools, .formRow, .tabs, .tab, input, select{
+        display:none !important;
+      }
+
+      /* نخفي عمود الإجراء (آخر عمود) من الجداول */
+      #tblReceipts th:last-child,
+      #tblReceipts td:last-child,
+      #tblPayments th:last-child,
+      #tblPayments td:last-child{
+        display:none !important;
+      }
+
+      body{ background:#fff !important; color:#000 !important; }
+      .app{ display:block !important; padding:0 !important; max-width:100% !important; }
+      .topbar, .kpi, .card, .tableWrap{
+        box-shadow:none !important;
+        background:#fff !important;
+        border:1px solid #000 !important;
+        border-top: 1px solid #000 !important;
+      }
+      .watermark{ display:flex !important; color: rgba(0,0,0,.08) !important; }
+      table{ min-width:0 !important; }
+      thead th{ position: static !important; background:#eee !important; color:#000 !important; }
+      th, td{ color:#000 !important; border-bottom:1px solid #000 !important; }
+      tfoot td{ background:#fffbea !important; }
+      [contenteditable="true"]:focus{ box-shadow:none !important; background:transparent !important; }
+      tr, td, th{ page-break-inside: avoid; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== هيدر الغدير ===== -->
+  <header class="site-header">
+    <div class="brand">
+      <img src="ghadeer-logo.png" alt="ghadeer logo">
+      <div class="brand-name">
+        <span>شركة الغدير</span><br>
+        <small>للنقل والتخليص الكمركي</small>
+      </div>
+    </div>
+
+    <nav class="topnav">
+      <ul>
+        <li><a href="home.html">الرئيسية</a></li>
+        <li><a href="client.html">العملاء</a></li>
+        <li><a href="client-details.html">الفواتير</a></li>
+        <li><a href="client-account.html">كشف الحساب</a></li>
+        <li><a href="expenses.html">المصروفات</a></li>
+      </ul>
+
+      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="home.html">🏠 الرئيسية</a>
+        <a href="client.html">👥 العملاء</a>
+        <a href="client-details.html">🧾 الفواتير</a>
+        <a href="client-account.html">📊 كشف الحساب</a>
+        <a href="expenses.html">💰 المصروفات</a>
+      </div>
+    </nav>
+  </header>
+
+  <div id="watermark" class="watermark" contenteditable="true">CONFIDENTIAL</div>
+
+  <div class="app">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="side">
+      <div class="sideHead">
+        <div class="brandRow">
+          <div class="logo">S</div>
+          <div class="brandText">
+            <b contenteditable="true" id="sideCompany">نظام حسابات</b>
+            <span>كشف حساب / تسوية / طباعة PDF</span>
+          </div>
+        </div>
+
+        <div class="pillRow">
+          <div class="pill">📅 <b id="dateNow">—</b></div>
+          <div class="pill good">🧠 <b>حفظ تلقائي</b></div>
+        </div>
+      </div>
+
+      <div class="sideBlock">
+        <div class="label">الرصيد السابق (Opening Balance)</div>
+        <input id="prevBalanceInput" class="field" inputmode="numeric" placeholder="مثال: 15000" />
+        <div style="height:10px"></div>
+        <div class="grid2">
+          <button class="btn" type="button" onclick="applyPrevBalance()">تطبيق الرصيد</button>
+          <button class="btn" type="button" onclick="refreshTotals()">تحديث</button>
+        </div>
+      </div>
+
+      <div class="sideBlock">
+        <div class="label">فترة التقرير (اختياري للترتيب/الطباعة)</div>
+        <div class="grid2">
+          <input id="periodFrom" class="field" type="date">
+          <input id="periodTo" class="field" type="date">
+        </div>
+        <div style="height:10px"></div>
+        <div class="label">العملة</div>
+        <select id="currency" class="field" onchange="refreshTotals()">
+          <option value="$">$ دولار</option>
+          <option value="IQD">IQD دينار</option>
+          <option value="€">€ يورو</option>
+        </select>
+      </div>
+
+      <div class="btnRow">
+        <button class="btn" type="button" onclick="window.print()">🖨️ طباعة</button>
+        <button class="btn primary" type="button" onclick="generatePDF()">📄 PDF</button>
+        <button class="btn" type="button" onclick="exportCSV()">⬇️ CSV</button>
+        <button class="btn danger" type="button" onclick="resetAll()">🧹 مسح الكل</button>
+      </div>
+
+      <div class="sideFooter">
+        - هذا “نظام حسابي”: أي تعديل في الجداول يُحفظ تلقائيًا على نفس الجهاز.<br>
+        - PDF هنا نص عربي (مو صورة) بشرط تضمين خط Cairo في VFS.<br>
+        - العلامة المائية قابلة للتعديل بالضغط عليها.
+      </div>
+    </aside>
+
+    <!-- ===== Main ===== -->
+    <main class="main">
+
+      <!-- Header -->
+      <header class="topbar" id="printHeader">
+        <div class="tbLeft">
+          <h1 class="tbTitle">كشف حساب — دفوعات سعيد</h1>
+          <div class="tbSub">
+            واجهة “دفتر أستاذ” مرتبة: وصولات (Debit) + قبوضات (Credit) + صافي الرصيد.<br>
+            الخلايا قابلة للتحرير، والحساب يتحدث تلقائيًا.
+          </div>
+
+          <div class="tabs">
+            <div class="tab active" data-tab="receipts" onclick="switchTab('receipts')">📦 الوصولات</div>
+            <div class="tab" data-tab="payments" onclick="switchTab('payments')">💵 القبوضات</div>
+            <div class="tab" data-tab="report" onclick="switchTab('report')">📊 تقرير</div>
+          </div>
+        </div>
+
+        <div class="tbRight">
+          <div class="tbRow">
+            <span>اسم الشركة:</span>
+            <b class="ph-company" contenteditable="true">اسم الشركة</b>
+          </div>
+          <div class="tbRow">
+            <span>العنوان / الهاتف / البريد:</span>
+            <b class="ph-sub" contenteditable="true">العنوان / الهاتف / البريد</b>
+          </div>
+          <div class="tbRow">
+            <span>رقم المستند:</span>
+            <b id="docNo" contenteditable="true">DOC-0001</b>
+          </div>
+          <div class="tbRow">
+            <span>التاريخ:</span>
+            <b id="docDate">—</b>
+          </div>
+        </div>
+      </header>
+
+      <!-- KPI -->
+      <section class="summary">
+        <div class="kpi info">
+          <div class="k">📦 مجموع الوصولات</div>
+          <div class="v" id="sumReceipts2">—</div>
+        </div>
+        <div class="kpi warn">
+          <div class="k">💵 مجموع القبوضات</div>
+          <div class="v" id="sumPayments2">—</div>
+        </div>
+        <div class="kpi good">
+          <div class="k">🧮 الصافي</div>
+          <div class="v" id="remaining">—</div>
+        </div>
+      </section>
+
+      <!-- ===== Receipts Section ===== -->
+      <section class="section active" id="sec-receipts">
+        <div class="card">
+          <div class="cardHead">
+            <h2>📦 الوصولات (Debit)</h2>
+            <div class="tools">
+              <input id="searchReceipts" class="smallField" placeholder="بحث سريع (اسم/سيارة/تاريخ/ملاحظة)" oninput="filterTable('tblReceipts', this.value)">
+              <span style="color:var(--muted);font-weight:900;font-size:.82rem;">الإجمالي: <span id="sumReceipts">—</span></span>
+            </div>
+          </div>
+
+          <div class="formRow" id="formsReceipts">
+            <input id="rDriver" class="field" placeholder="اسم السائق">
+            <input id="rCar" class="field" placeholder="رقم السيارة">
+            <input id="rDate" class="field" placeholder="التاريخ (مثلاً 3/12)">
+            <input id="rNote" class="field" placeholder="ملاحظة">
+            <input id="rAmount" class="field" placeholder="المبلغ (مثلاً 1250)">
+            <button class="btn primary" type="button" onclick="addReceipt()">إضافة وصول</button>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="tableWrap">
+            <table id="tblReceipts">
+              <thead>
+                <tr>
+                  <th>الرقم</th>
+                  <th>اسم السائق</th>
+                  <th>رقم السيارة</th>
+                  <th>التاريخ</th>
+                  <th>ملاحظة</th>
+                  <th>المبلغ</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">3/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>2</td><td contenteditable="true">حسن حيدر حسن</td><td contenteditable="true">24876</td><td contenteditable="true">3/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>3</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">3/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>4</td><td contenteditable="true">علي عبد مرعي</td><td contenteditable="true">44355</td><td contenteditable="true">5/12</td><td contenteditable="true">جمعة 6:43 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>5</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">5/12</td><td contenteditable="true">جمعة 10 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>6</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">353120</td><td contenteditable="true">6/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>7</td><td contenteditable="true">واثق طارق</td><td contenteditable="true">12339</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 10:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>8</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>9</td><td contenteditable="true">محمد حيدر حسن</td><td contenteditable="true">20715</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>10</td><td contenteditable="true">حسن حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 10:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>11</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">11/12</td><td contenteditable="true">الخميس 11:00</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>12</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">203135</td><td contenteditable="true">13/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>13</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">13/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>14</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">15/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>15</td><td contenteditable="true">واثق طارق مليجان</td><td contenteditable="true">12339</td><td contenteditable="true">16/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>16</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">16/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>17</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">17/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>18</td><td contenteditable="true">حسن حيدر حسن</td><td contenteditable="true">24876</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>19</td><td contenteditable="true">محسن ساي غريب</td><td contenteditable="true">203135</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>20</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>21</td><td contenteditable="true">غازي عباس</td><td contenteditable="true">25979</td><td contenteditable="true">20/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>22</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">20/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>23</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>24</td><td contenteditable="true">حسين حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>25</td><td contenteditable="true">إبراهيم خليل عبدالله</td><td contenteditable="true">23600</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>26</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">22/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>27</td><td contenteditable="true">واثق طارق مليجان</td><td contenteditable="true">12339</td><td contenteditable="true">24/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>28</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">24/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>29</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">203135</td><td contenteditable="true">26/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>30</td><td contenteditable="true">عباس فاضل</td><td contenteditable="true">19963</td><td contenteditable="true">26/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>31</td><td contenteditable="true">محمد خيدر</td><td contenteditable="true">20715</td><td contenteditable="true">28/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>32</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">29/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>33</td><td contenteditable="true">حسن حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>34</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>35</td><td contenteditable="true">واثق طارق</td><td contenteditable="true">12339</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>36</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">31/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">مجموع الوصولات</td>
+                  <td id="sumReceiptsFoot">—</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Payments Section ===== -->
+      <section class="section" id="sec-payments">
+        <div class="card">
+          <div class="cardHead">
+            <h2>💵 القبوضات (Credit)</h2>
+            <div class="tools">
+              <input id="searchPayments" class="smallField" placeholder="بحث سريع (اسم/تاريخ/مبلغ)" oninput="filterTable('tblPayments', this.value)">
+              <span style="color:var(--muted);font-weight:900;font-size:.82rem;">الإجمالي: <span id="sumPayments">—</span></span>
+            </div>
+          </div>
+
+          <div class="formRow small" id="formsPayments">
+            <input id="pName" class="field" placeholder="الاسم">
+            <input id="pDate" class="field" placeholder="التاريخ (مثلاً 1/1/2024)">
+            <input id="pAmount" class="field" placeholder="المبلغ (مثلاً 5000)">
+            <button class="btn primary" type="button" onclick="addPayment()">إضافة قبض</button>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="tableWrap">
+            <table id="tblPayments">
+              <thead>
+                <tr>
+                  <th>الرقم</th>
+                  <th>الاسم</th>
+                  <th>التاريخ</th>
+                  <th>المبلغ</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td contenteditable="true">سعيد</td><td contenteditable="true">1/1/2024</td><td contenteditable="true">5000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>2</td><td contenteditable="true">سعيد</td><td contenteditable="true">3/1/2024</td><td contenteditable="true">5300$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>3</td><td contenteditable="true">سعيد</td><td contenteditable="true">5/1/2024</td><td contenteditable="true">10000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>4</td><td contenteditable="true">سعيد</td><td contenteditable="true">7/1/2024</td><td contenteditable="true">10000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>5</td><td contenteditable="true">سعيد</td><td contenteditable="true">9/1/2024</td><td contenteditable="true">5000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>6</td><td contenteditable="true">سعيد</td><td contenteditable="true">11/1/2024</td><td contenteditable="true">500$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>7</td><td contenteditable="true">سعيد</td><td contenteditable="true">13/1/2024</td><td contenteditable="true">1230$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">مجموع القبوضات</td>
+                  <td id="sumPaymentsFoot">—</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Report Section ===== -->
+      <section class="section" id="sec-report">
+        <div class="card">
+          <div class="cardHead">
+            <h2>📊 تقرير مختصر</h2>
+            <div class="tools">
+              <button class="btn" type="button" onclick="normalizeAllMoney()">🧾 توحيد تنسيق المبالغ</button>
+              <button class="btn" type="button" onclick="refreshTotals()">🔄 إعادة احتساب</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="border:1px solid var(--line);border-radius:var(--r);padding:14px;background:#f5f8ff;">
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Opening Balance</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;" id="repPrev">—</div>
+              <div style="height:10px"></div>
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Receipts (Debit)</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:var(--blue);" id="repRec">—</div>
+            </div>
+
+            <div style="border:1px solid var(--line);border-radius:var(--r);padding:14px;background:#f5f8ff;">
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Payments (Credit)</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:#b08000;" id="repPay">—</div>
+              <div style="height:10px"></div>
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Net</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:var(--green);" id="repNet">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;color:var(--muted);font-weight:800;line-height:1.8;font-size:.85rem;">
+            ملاحظة: هذا التقرير يعتمد على الرصيد السابق + مجموع الوصولات − مجموع القبوضات.
+            إذا غيّرت العملة من الشريط الجانبي، سيتم تحديث التنسيق (رمز العملة) فورًا.
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== JS منيو الموبايل ===== -->
+  <script>
+    (function(){
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('mobileMenu');
+      if (!toggle || !menu) return;
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('open');
+      });
+
+      document.addEventListener('click', () => menu.classList.remove('open'));
+      window.addEventListener('resize', () => menu.classList.remove('open'));
+    })();
+  </script>
+
+  <!-- pdfmake -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"></script>
+
+  <!-- Cairo داخل PDF (VFS) -->
+  <script>
+    (function setupCairoVFS(){
+      if (!window.pdfMake) return;
+      pdfMake.vfs = pdfMake.vfs || {};
+      pdfMake.vfs["Cairo-Regular.ttf"] = "PLACE_BASE64_CAIRO_REGULAR_HERE";
+      pdfMake.vfs["Cairo-Bold.ttf"]    = "PLACE_BASE64_CAIRO_BOLD_HERE";
+
+      pdfMake.fonts = pdfMake.fonts || {};
+      pdfMake.fonts.Cairo = {
+        normal: "Cairo-Regular.ttf",
+        bold: "Cairo-Bold.ttf"
+      };
+    })();
+  </script>
+
+  <!-- ===== نظامك (JS) ===== -->
+  <script>
+    const STORE_KEY = "saeed_statement_allinone_v2_professional";
+    let saveTimer = null;
+
+    function getCurrencySymbol(){
+      const c = document.getElementById("currency");
+      return (c && c.value) ? c.value : "$";
+    }
+
+    function parseMoney(text) {
+      const cleaned = (text || "").toString().replace(/[^\d.-]/g, "");
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function formatMoney(n) {
+      const sym = getCurrencySymbol();
+      const s = (Number(n) || 0).toFixed(0);
+      const withCommas = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return withCommas + sym;
+    }
+
+    function renumber(tableId) {
+      const tbl = document.getElementById(tableId);
+      if (!tbl) return;
+      const rows = tbl.tBodies?.[0]?.rows || [];
+      let i = 1;
+      for (const r of rows) {
+        if (r.cells?.[0]) r.cells[0].textContent = i++;
+      }
+    }
+
+    function sumTable(tableId) {
+      const tbl = document.getElementById(tableId);
+      if (!tbl) return 0;
+      const rows = tbl.tBodies?.[0]?.rows || [];
+      let total = 0;
+      for (const r of rows) {
+        const len = r.cells.length;
+        const amountCell = r.cells[len - 2]; // قبل عمود الإجراء
+        total += parseMoney(amountCell?.textContent);
+      }
+      return total;
+    }
+
+    function tableToArray(tableId) {
+      const tbl = document.getElementById(tableId);
+      const rows = tbl.tBodies[0].rows;
+      const data = [];
+      for (const r of rows) {
+        const row = [];
+        for (let i = 0; i < r.cells.length - 1; i++) { // بدون الإجراء
+          row.push(r.cells[i].textContent.trim());
+        }
+        data.push(row);
+      }
+      return data;
+    }
+
+    function tdEditable(text) {
+      const td = document.createElement("td");
+      td.contentEditable = "true";
+      td.textContent = text;
+      return td;
+    }
+
+    function tdPlain(text) {
+      const td = document.createElement("td");
+      td.textContent = text;
+      return td;
+    }
+
+    function makeActionCell() {
+      const td = document.createElement("td");
+      td.innerHTML = `<button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button>`;
+      return td;
+    }
+
+    function saveState() {
+      const state = {
+        prevBalance: (document.getElementById("prevBalanceInput")?.value || "").trim(),
+        docNo: (document.getElementById("docNo")?.textContent || "").trim(),
+        watermark: (document.getElementById("watermark")?.textContent || "").trim(),
+        company: (document.querySelector(".ph-company")?.textContent || "").trim(),
+        sub: (document.querySelector(".ph-sub")?.textContent || "").trim(),
+        sideCompany: (document.getElementById("sideCompany")?.textContent || "").trim(),
+        currency
