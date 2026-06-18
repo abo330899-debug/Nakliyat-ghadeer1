@@ -1,0 +1,137 @@
+ <tbody>
+                <tr><td>1</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">3/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>2</td><td contenteditable="true">حسن حيدر حسن</td><td contenteditable="true">24876</td><td contenteditable="true">3/12</td><td contenteditable="true">7</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>3</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">3/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>4</td><td contenteditable="true">علي عبد مرعي</td><td contenteditable="true">44355</td><td contenteditable="true">5/12</td><td contenteditable="true">جمعة 6:43 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>5</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">5/12</td><td contenteditable="true">جمعة 10 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>6</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">353120</td><td contenteditable="true">6/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>7</td><td contenteditable="true">واثق طارق</td><td contenteditable="true">12339</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 10:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>8</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>9</td><td contenteditable="true">محمد حيدر حسن</td><td contenteditable="true">20715</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>10</td><td contenteditable="true">حسن حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">7/12</td><td contenteditable="true">الأحد 10:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>11</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">11/12</td><td contenteditable="true">الخميس 11:00</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>12</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">203135</td><td contenteditable="true">13/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>13</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">13/12</td><td contenteditable="true">السبت 6:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>14</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">15/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>15</td><td contenteditable="true">واثق طارق مليجان</td><td contenteditable="true">12339</td><td contenteditable="true">16/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>16</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">16/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>17</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">17/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>18</td><td contenteditable="true">حسن حيدر حسن</td><td contenteditable="true">24876</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>19</td><td contenteditable="true">محسن ساي غريب</td><td contenteditable="true">203135</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>20</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">19/12</td><td contenteditable="true">الجمعة</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>21</td><td contenteditable="true">غازي عباس</td><td contenteditable="true">25979</td><td contenteditable="true">20/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>22</td><td contenteditable="true">محمد حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">20/12</td><td contenteditable="true">الأحد 11:30 مساء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>23</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>24</td><td contenteditable="true">حسين حيدر</td><td contenteditable="true">20715</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>25</td><td contenteditable="true">إبراهيم خليل عبدالله</td><td contenteditable="true">23600</td><td contenteditable="true">21/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>26</td><td contenteditable="true">عباس فاضل الياس</td><td contenteditable="true">19963</td><td contenteditable="true">22/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>27</td><td contenteditable="true">واثق طارق مليجان</td><td contenteditable="true">12339</td><td contenteditable="true">24/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>28</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">24/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>29</td><td contenteditable="true">محسن ساي</td><td contenteditable="true">203135</td><td contenteditable="true">26/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>30</td><td contenteditable="true">عباس فاضل</td><td contenteditable="true">19963</td><td contenteditable="true">26/12</td><td contenteditable="true">الأحد</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>31</td><td contenteditable="true">محمد خيدر</td><td contenteditable="true">20715</td><td contenteditable="true">28/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>32</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">29/12</td><td contenteditable="true">الاثنين</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>33</td><td contenteditable="true">حسن حيدر</td><td contenteditable="true">24876</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>34</td><td contenteditable="true">حسن فاضل</td><td contenteditable="true">24187</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>35</td><td contenteditable="true">واثق طارق</td><td contenteditable="true">12339</td><td contenteditable="true">31/12</td><td contenteditable="true">الأربعاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>36</td><td contenteditable="true">موسى طه ياسين</td><td contenteditable="true">13834</td><td contenteditable="true">31/12</td><td contenteditable="true">الثلاثاء</td><td contenteditable="true">1250$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">مجموع الوصولات</td>
+                  <td id="sumReceiptsFoot">—</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Payments Section ===== -->
+      <section class="section" id="sec-payments">
+        <div class="card">
+          <div class="cardHead">
+            <h2>💵 القبوضات (Credit)</h2>
+            <div class="tools">
+              <input id="searchPayments" class="smallField" placeholder="بحث سريع (اسم/تاريخ/مبلغ)" oninput="filterTable('tblPayments', this.value)">
+              <span style="color:var(--muted);font-weight:900;font-size:.82rem;">الإجمالي: <span id="sumPayments">—</span></span>
+            </div>
+          </div>
+
+          <div class="formRow small" id="formsPayments">
+            <input id="pName" class="field" placeholder="الاسم">
+            <input id="pDate" class="field" placeholder="التاريخ (مثلاً 1/1/2024)">
+            <input id="pAmount" class="field" placeholder="المبلغ (مثلاً 5000)">
+            <button class="btn primary" type="button" onclick="addPayment()">إضافة قبض</button>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="tableWrap">
+            <table id="tblPayments">
+              <thead>
+                <tr>
+                  <th>الرقم</th>
+                  <th>الاسم</th>
+                  <th>التاريخ</th>
+                  <th>المبلغ</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td contenteditable="true">سعيد</td><td contenteditable="true">1/1/2024</td><td contenteditable="true">5000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>2</td><td contenteditable="true">سعيد</td><td contenteditable="true">3/1/2024</td><td contenteditable="true">5300$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>3</td><td contenteditable="true">سعيد</td><td contenteditable="true">5/1/2024</td><td contenteditable="true">10000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>4</td><td contenteditable="true">سعيد</td><td contenteditable="true">7/1/2024</td><td contenteditable="true">10000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>5</td><td contenteditable="true">سعيد</td><td contenteditable="true">9/1/2024</td><td contenteditable="true">5000$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>6</td><td contenteditable="true">سعيد</td><td contenteditable="true">11/1/2024</td><td contenteditable="true">500$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+                <tr><td>7</td><td contenteditable="true">سعيد</td><td contenteditable="true">13/1/2024</td><td contenteditable="true">1230$</td><td><button class="miniBtn danger" type="button" onclick="deleteRow(this)">حذف</button></td></tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">مجموع القبوضات</td>
+                  <td id="sumPaymentsFoot">—</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Report Section ===== -->
+      <section class="section" id="sec-report">
+        <div class="card">
+          <div class="cardHead">
+            <h2>📊 تقرير مختصر</h2>
+            <div class="tools">
+              <button class="btn" type="button" onclick="normalizeAllMoney()">🧾 توحيد تنسيق المبالغ</button>
+              <button class="btn" type="button" onclick="refreshTotals()">🔄 إعادة احتساب</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="border:1px solid var(--line);border-radius:var(--r);padding:14px;background:#f5f8ff;">
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Opening Balance</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;" id="repPrev">—</div>
+              <div style="height:10px"></div>
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Receipts (Debit)</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:var(--blue);" id="repRec">—</div>
+            </div>
+
+            <div style="border:1px solid var(--line);border-radius:var(--r);padding:14px;background:#f5f8ff;">
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Payments (Credit)</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:#b08000;" id="repPay">—</div>
+              <div style="height:10px"></div>
+              <div style="color:var(--muted);font-weight:900;font-size:.82rem;">Net</div>
+              <div style="font-weight:900;font-size:1.1rem;margin-top:4px;color:var(--green);" id="repNet">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;color:var(--muted);font-weight:800;line-height:1.8;font-size:.85rem;">
+            ملاحظة: هذا التقرير يعتمد على الرصيد السابق + مجموع الوصولات − مجموع القبوضات.
+            إذا غيّرت العملة من الشريط الجانبي، سيتم تحديث التنسيق (رمز العملة) فورًا.
+          </div>
+        </div>
+      </section>
