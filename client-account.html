@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>كشف حساب العميل | شركة الغدير</title>
+  <link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <style>
+    .app {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      min-height: calc(100vh - 80px);
+    }
+    @media (max-width: 1100px) { .app { grid-template-columns: 1fr; } }
+
+    .side {
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 80px - 28px);
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 1100px) { .side { position: relative; height: auto; top: auto; } }
+
+    .sideHead { padding: 14px; border-bottom: 1px solid var(--cardBorder); background: var(--glass); }
+    .brandRow { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent1), var(--teal));
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bg1); font-weight: 900; font-size: 1.2rem; flex: 0 0 auto;
+    }
+    .brandText b { display: block; font-size: .95rem; font-weight: 900; color: var(--accent1); }
+    .brandText span { display: block; color: var(--textSoft); font-weight: 700; font-size: .78rem; margin-top: 2px; }
+
+    .pillRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .pill {
+      border: 1px solid var(--cardBorder); background: var(--glass);
+      border-radius: 999px; padding: 6px 10px; font-weight: 900; font-size: .76rem;
+      color: var(--textSoft); display: inline-flex; align-items: center; gap: 6px;
+    }
+    .pill b { color: var(--accent1); }
+    .pill.good b { color: var(--teal); }
+    .pill.warn b { color: var(--red); }
+
+    .sideBlock { padding: 12px 14px; border-bottom: 1px solid var(--cardBorder); }
+    .label { color: var(--textMuted); font-size: .76rem; font-weight: 800; margin-bottom: 6px; }
+
+    .field {
+      width: 100%; border: 1px solid var(--cardBorder); background: var(--glass);
+      color: var(--text); border-radius: var(--radiusSm); height: 40px;
+      padding: 8px 10px; font-weight: 800; outline: none; font-family: inherit;
+    }
+    .field:focus { border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(232,178,48,0.12); }
+
+    .btnRow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 14px; }
+    .btn {
+      height: 40px; border-radius: var(--radiusSm); border: 1px solid var(--cardBorder);
+      background: var(--glass); color: var(--text); font-weight: 900; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: 0.3s; font-size: .85rem; font-family: inherit;
+    }
+    .btn:hover { transform: translateY(-2px); background: var(--glass2); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1); border-color: transparent;
+      box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+    .btn.danger { background: var(--glass); color: var(--red); border-color: rgba(255,71,87,0.3); }
+
+    .sideFooter {
+      margin-top: auto; padding: 12px 14px; color: var(--textMuted);
+      font-weight: 700; font-size: .74rem; line-height: 1.7;
+      border-top: 1px solid var(--cardBorder); background: var(--glass); text-align: center;
+    }
+
+    .main { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+
+    .topbar {
+      background: var(--cardBg); backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder); border-radius: var(--radius);
+      padding: 14px; display: flex; gap: 12px; align-items: flex-start;
+      justify-content: space-between; flex-wrap: wrap;
+    }
+    .tbTitle { margin: 0; font-size: 1.1rem; font-weight: 900; padding-bottom: 6px; display: inline-block; border-bottom: 3px solid var(--accent1); }
+    .tbSub { margin-top: 8px; color: var(--textSoft); font-size: .82rem; font-weight: 700; }
+
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 980px) { .summary { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .summary { grid-template-columns: 1fr; } }
+
+    .kpi {
+      background: var(--cardBg); backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder); border-radius: var(--radius);
+      padding: 14px; display: flex; justify-content: space-between; gap: 10px;
+      align-items: center; position: relative; overflow: hidden;
+    }
+    .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent1), var(--teal)); }
+    .kpi .k { color: var(--textSoft); font-weight: 900; font-size: .80rem; }
+    .kpi .v { font-weight: 900; font-size: 1rem; color: var(--accent1); }
+    .kpi.good .v { color: var(--teal); }
+    .kpi.good::before { background: linear-gradient(90deg, var(--teal), var(--teal2)); }
+    .kpi.warn .v { color: var(--red); }
+    .kpi.warn::before { background: linear-gradient(90deg, var(--red), #ff6b6b); }
+    .kpi.blue .v { color: var(--blue2); }
+    .kpi.blue::before { background: linear-gradient(90deg, var(--blue), var(--blue2)); }
+
+    .monthCard {
+      background: var(--cardBg); backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder); border-radius: var(--radius);
+      overflow: hidden; transition: 0.3s;
+    }
+    .monthCard:hover { border-color: rgba(232,178,48,0.3); }
+
+    .monthHead {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1); padding: 14px 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px; cursor: pointer;
+    }
+    .monthHead h3 { margin: 0; font-weight: 900; font-size: 1rem; }
+    .monthHead small { opacity: 0.85; font-size: .82rem; }
+    .monthHead .monthBadge {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .monthHead .badge {
+      background: rgba(0,0,0,0.15); border-radius: 8px;
+      padding: 4px 10px; font-weight: 900; font-size: .82rem;
+    }
+
+    .monthBody { padding: 16px; }
+    .monthBody.collapsed { display: none; }
+
+    .subTitle {
+      font-weight: 900; font-size: .88rem; margin: 12px 0 8px;
+      padding: 6px 10px; border-radius: var(--radiusSm);
+      display: inline-block;
+    }
+    .subTitle.drivers { color: var(--teal); background: rgba(72,187,120,0.08); border: 1px solid rgba(72,187,120,0.2); }
+    .subTitle.payments { color: var(--blue2); background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.2); }
+
+    .tableWrap {
+      overflow: auto; border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder); background: var(--glass); margin-bottom: 10px;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: .80rem; }
+    th, td { border-bottom: 1px solid var(--glass); padding: 8px 10px; text-align: center; font-weight: 800; color: var(--text); }
+    thead th { position: sticky; top: 0; z-index: 2; background: var(--glass2); font-size: .76rem; color: var(--accent1); border-bottom: 2px solid var(--cardBorder); }
+    tbody tr:hover { background: var(--glass); }
+    tfoot td { background: var(--glass2); border-top: 2px solid var(--cardBorder); font-weight: 900; }
+
+    .monthSummary {
+      margin-top: 12px; padding: 14px;
+      background: var(--glass); border-radius: var(--radiusSm);
+      border: 2px solid var(--accent1);
+    }
+    .monthSummary table { min-width: 0; }
+    .monthSummary td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--glass); }
+    .monthSummary td:last-child { text-align: left; font-weight: 900; }
+    .summRow { border-radius: var(--radiusSm); margin-bottom: 2px; }
+    .summRow.prev { background: rgba(232,178,48,0.08); }
+    .summRow.plus { background: rgba(72,187,120,0.08); }
+    .summRow.minus { background: rgba(255,71,87,0.08); }
+    .summRow.total { background: linear-gradient(135deg, var(--accent1), var(--accent2)); }
+    .summRow.total td { color: var(--bg1) !important; font-size: 1rem; }
+
+    .emptyMonth {
+      text-align: center; padding: 20px; color: var(--textMuted);
+      font-weight: 800; font-size: .88rem;
+    }
+
+    .actionBtns {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .miniBtn {
+      height: 32px; padding: 5px 12px; border-radius: 8px;
+      border: 1px solid var(--cardBorder); background: var(--glass);
+      color: var(--textSoft); font-weight: 900; cursor: pointer; font-size: .78rem;
+      font-family: inherit; transition: 0.3s;
+    }
+    .miniBtn:hover { background: var(--glass2); }
+    .miniBtn.add { color: var(--teal); border-color: rgba(72,187,120,0.3); }
+    .miniBtn.del { color: var(--red); border-color: rgba(255,71,87,0.3); background: rgba(255,71,87,0.05); }
+
+    .watermark {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 60px; font-weight: 900; color: rgba(255,255,255,.02);
+      transform: rotate(-18deg); pointer-events: none; z-index: 0;
+    }
+
+    .modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(8px);
+      justify-content: center; align-items: center;
+      z-index: 9999; padding: 16px;
+    }
+    .modal.open { display: flex; }
+    .modal-box {
+      width: min(520px, 92vw); background: var(--bg2);
+      border-radius: var(--radius); border: 1px solid var(--cardBorder);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.4); overflow: hidden;
+    }
+    .modal-head {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1); padding: 12px 14px; font-weight: 900;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .modal-head button {
+      background: rgba(0,0,0,0.15); border: none; color: var(--bg1);
+      width: 32px; height: 32px; border-radius: var(--radiusSm); cursor: pointer; font-weight: 900;
+    }
+    .modal-body { padding: 14px; }
+    .modal-body label { font-weight: 900; margin-top: 10px; display: block; color: var(--textSoft); font-size: .85rem; }
+    .modal-body input, .modal-body select {
+      width: 100%; height: 40px; border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder); background: var(--glass);
+      color: var(--text); padding: 0 12px; box-sizing: border-box; font-family: inherit;
+    }
+    .modal-body input:focus { border-color: var(--accent1); outline: none; }
+    .modal-actions { display: flex; gap: 10px; padding: 12px 14px 14px; }
+    .modal-actions button {
+      flex: 1; height: 40px; border-radius: var(--radiusSm);
+      border: none; cursor: pointer; font-weight: 900; transition: 0.3s; font-family: inherit;
+    }
+    .m-cancel { background: var(--glass2); color: var(--text); }
+    .m-save {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1); box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+
+    .tabsRow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .tabBtn {
+      padding: 6px 12px; border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder); background: var(--glass);
+      color: var(--textSoft); font-weight: 900; cursor: pointer; font-size: .8rem;
+      transition: 0.3s; font-family: inherit;
+    }
+    .tabBtn:hover { background: var(--glass2); }
+    .tabBtn.active {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1); border-color: transparent;
+    }
+
+    @media print {
+      header.main-header { display: none !important; }
+      .side { display: none !important; }
+      button, .btn, .btnRow, .miniBtn, .actionBtns, input, select { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      body::before { display: none !important; }
+      .app { display: block !important; padding: 0 !important; max-width: 100% !important; }
+      .monthCard, .kpi, .topbar, .tableWrap, .monthSummary {
+        box-shadow: none !important; border: 1px solid #ccc !important;
+        background: #fff !important; backdrop-filter: none !important;
+      }
+      .monthHead { background: #f0f0f0 !important; color: #000 !important; }
+      .monthHead .badge { background: #ddd !important; }
+      table { min-width: 0 !important; }
+      thead th { position: static !important; background: #f5f5f5 !important; color: #000 !important; }
+      td, th, .tbTitle, h1, h2, h3, .kpi .k, .kpi .v, .subTitle { color: #000 !important; }
+      .summRow.total { background: #e8e8e8 !important; }
+      .summRow.total td { color: #000 !important; }
+      .watermark { display: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="logo">
+    <div class="brand-name">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">الرئيسية</a></li>
+      <li><a href="client.html">العملاء</a></li>
+      <li><a href="client-statement.html">الوصولات</a></li>
+      <li><a href="expenses.html">المصروفات</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">الرئيسية</a>
+      <a href="client.html">العملاء</a>
+      <a href="client-statement.html">الوصولات</a>
+      <a href="expenses.html">المصروفات</a>
+    </div>
+  </nav>
+</header>
+
+<div class="watermark">شركة الغدير</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="sideHead">
+      <div class="brandRow">
+        <div class="logo" id="clientInitial">?</div>
+        <div class="brandText">
+          <b id="sideClientName">اسم العميل</b>
+          <span>كشف الحساب الشهري</span>
+        </div>
+      </div>
+      <div class="pillRow">
+        <div class="pill">عدد الأشهر: <b id="monthsCount">0</b></div>
+        <div class="pill good">الرصيد: <b id="pillBalance">$0</b></div>
+      </div>
+    </div>
+
+    <div class="sideBlock">
+      <div class="label">إنشاء حساب شهر جديد</div>
+      <input id="newMonthNote" class="field" placeholder="اسم الشهر (مثال: شهر 1 - 2026)" style="margin-bottom:8px;">
+      <input id="newMonthDate" class="field" type="date" style="margin-bottom:8px;">
+    </div>
+
+    <div class="btnRow">
+      <button class="btn primary" onclick="createNewMonth()">إنشاء شهر</button>
+      <button class="btn" onclick="window.print()">طباعة</button>
+      <button class="btn" onclick="location.href='client-statement.html?client='+encodeURIComponent(clientId)">التفاصيل</button>
+      <button class="btn" onclick="location.href='client.html'">رجوع</button>
+    </div>
+
+    <div class="sideBlock">
+      <div class="label">الرصيد السابق (القديم)</div>
+      <div style="display:flex;gap:6px;">
+        <input id="prevBalanceInput" class="field" type="number" placeholder="0" style="flex:1;">
+        <button class="btn primary" onclick="savePrevBalance()" style="width:70px;font-size:.78rem;">حفظ</button>
+      </div>
+    </div>
+
+    <div class="sideFooter">
+      شركة الغدير للنقل والتخليص الكمركي<br>
+      زاخو – إبراهيم الخليل
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 class="tbTitle" id="pageTitle">كشف حساب العميل</h1>
+        <div class="tbSub">حساب شهر بشهر — وصولات وقبوضات مع رصيد تراكمي</div>
+      </div>
+      <div class="tabsRow">
+        <button class="tabBtn active" onclick="setView('all')">كل الأشهر</button>
+        <button class="tabBtn" onclick="expandAll()">فتح الكل</button>
+        <button class="tabBtn" onclick="collapseAll()">إغلاق الكل</button>
+      </div>
+    </header>
+
+    <div class="summary">
+      <div class="kpi">
+        <div class="k">الرصيد السابق</div>
+        <div class="v" id="kpiOldBal">$0</div>
+      </div>
+      <div class="kpi good">
+        <div class="k">مجموع الوصولات</div>
+        <div class="v" id="kpiReceipts">$0</div>
+      </div>
+      <div class="kpi blue">
+        <div class="k">مجموع القبوضات</div>
+        <div class="v" id="kpiPayments">$0</div>
+      </div>
+      <div class="kpi warn" id="kpiFinalBox">
+        <div class="k">الرصيد النهائي</div>
+        <div class="v" id="kpiFinal">$0</div>
+      </div>
+    </div>
+
+    <div id="monthsContainer"></div>
+
+    <div id="emptyState" class="monthCard" style="display:none;">
+      <div class="emptyMonth">
+        لا توجد أشهر محاسبية بعد<br>
+        <small style="color:var(--textMuted);">أنشئ شهراً جديداً من القائمة الجانبية لبدء المحاسبة</small>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="addModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div id="addModalTitle">إضافة</div>
+      <button type="button" onclick="closeAddModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="addTypeSelector" style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="tabBtn active" id="tabAddDriver" onclick="switchAddTab('driver')">سائق (وصل)</button>
+        <button class="tabBtn" id="tabAddPayment" onclick="switchAddTab('payment')">قبض (دفعة)</button>
+      </div>
+      <div id="driverFields">
+        <label>اسم السائق</label>
+        <input type="text" id="addDriverName" placeholder="اسم السائق">
+        <label>رقم السيارة</label>
+        <input type="text" id="addDriverCar" placeholder="رقم السيارة">
+        <label>المحافظة / المدينة</label>
+        <input type="text" id="addDriverCity" placeholder="المحافظة">
+        <label>التاريخ</label>
+        <input type="text" id="addDriverDate" placeholder="مثال: 3/12">
+        <label>المبلغ ($)</label>
+        <input type="number" id="addDriverAmount" value="1250">
+      </div>
+      <div id="paymentFields" style="display:none;">
+        <label>الوصف / ملاحظة</label>
+        <input type="text" id="addPayNote" placeholder="حوالة / تسديد...">
+        <label>التاريخ</label>
+        <input type="date" id="addPayDate">
+        <label>المبلغ ($)</label>
+        <input type="number" id="addPayAmount" value="0">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeAddModal()">إلغاء</button>
+      <button class="m-save" onclick="saveAddItem()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const clientId = params.get('client') || localStorage.getItem('currentClient') || '';
+
+let clientData = null;
+let allInvoices = [];
+let oldBalance = 0;
+let currentAddInvoiceId = null;
+let currentAddType = 'driver';
+let expandedMonths = {};
+
+function money(n) { return '$' + Number(n || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+  document.getElementById('mobileMenu')?.classList.toggle('open');
+});
+
+async function loadData() {
+  if (!clientId) {
+    document.getElementById('pageTitle').textContent = 'الرجاء اختيار عميل';
+    return;
+  }
+
+  try {
+    const clientsRes = await fetch('/api/clients');
+    const clients = await clientsRes.json();
+    clientData = clients.find(c => c.id === clientId);
+
+    if (!clientData) {
+      document.getElementById('pageTitle').textContent = 'العميل غير موجود';
+      return;
+    }
+
+    document.getElementById('sideClientName').textContent = clientData.name;
+    document.getElementById('clientInitial').textContent = (clientData.name || '?').charAt(0);
+    document.getElementById('pageTitle').textContent = `كشف حساب — ${clientData.name}`;
+    document.title = `كشف حساب — ${clientData.name} | شركة الغدير`;
+    oldBalance = clientData.oldBalance || 0;
+    document.getElementById('prevBalanceInput').value = oldBalance || '';
+
+    const invoicesRes = await fetch(`/api/invoices?clientId=${encodeURIComponent(clientId)}&full=true`);
+    allInvoices = await invoicesRes.json();
+
+    render();
+  } catch (e) {
+    console.error('Error loading data:', e);
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function render() {
+  const container = document.getElementById('monthsContainer');
+  container.innerHTML = '';
+
+  document.getElementById('monthsCount').textContent = allInvoices.length;
+  document.getElementById('emptyState').style.display = allInvoices.length === 0 ? 'block' : 'none';
+
+  let runningBalance = oldBalance;
+  let totalReceipts = 0;
+  let totalPayments = 0;
+
+  allInvoices.forEach((inv, idx) => {
+    const prevBalance = runningBalance;
+    const invReceipts = inv.totalReceipts || 0;
+    const invPayments = inv.totalPayments || 0;
+    const driversCount = inv.drivers ? inv.drivers.length : 0;
+    const paymentsCount = inv.payments ? inv.payments.length : 0;
+
+    totalReceipts += invReceipts;
+    totalPayments += invPayments;
+    runningBalance = prevBalance + invReceipts - invPayments;
+
+    const isExpanded = expandedMonths[inv.id] !== false;
+
+    const card = document.createElement('div');
+    card.className = 'monthCard';
+    card.id = `month-${inv.id}`;
+
+    let driversHTML = '';
+    if (inv.drivers && inv.drivers.length > 0) {
+      driversHTML = `
+        <div class="tableWrap">
+          <table>
+            <thead><tr><th>#</th><th>التاريخ</th><th>اسم السائق</th><th>السيارة</th><th>المحافظة</th><th>المبلغ</th></tr></thead>
+            <tbody>
+              ${inv.drivers.map((d, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${esc(d.date) || '—'}</td>
+                  <td>${esc(d.name) || '—'}</td>
+                  <td>${esc(d.car) || '—'}</td>
+                  <td>${esc(d.city) || '—'}</td>
+                  <td style="color:var(--teal);">${money(d.amount)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot><tr><td colspan="5" style="color:var(--teal);">مجموع السواق</td><td style="color:var(--teal);">${money(invReceipts)}</td></tr></tfoot>
+          </table>
+        </div>
+      `;
+    } else {
+      driversHTML = '<div class="emptyMonth" style="padding:10px;">لا يوجد سواق في هذا الشهر</div>';
+    }
+
+    let paymentsHTML = '';
+    if (inv.payments && inv.payments.length > 0) {
+      paymentsHTML = `
+        <div class="tableWrap">
+          <table>
+            <thead><tr><th>#</th><th>التاريخ</th><th>الوصف</th><th>المبلغ</th></tr></thead>
+            <tbody>
+              ${inv.payments.map((p, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${esc(p.date) || '—'}</td>
+                  <td>${esc(p.note) || '—'}</td>
+                  <td style="color:var(--blue2);">${money(p.amount)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot><tr><td colspan="3" style="color:var(--blue2);">مجموع القبوضات</td><td style="color:var(--blue2);">${money(invPayments)}</td></tr></tfoot>
+          </table>
+        </div>
+      `;
+    } else {
+      paymentsHTML = '<div class="emptyMonth" style="padding:10px;">لا توجد قبوضات في هذا الشهر</div>';
+    }
+
+    const monthBalance = invReceipts - invPayments;
+
+    card.innerHTML = `
+      <div class="monthHead" onclick="toggleMonth('${inv.id}')">
+        <div>
+          <h3>${esc(inv.note) || 'شهر ' + (idx + 1)}</h3>
+          <small>التاريخ: ${esc(inv.date) || '—'} | رقم: ${esc(inv.id)}</small>
+        </div>
+        <div class="monthBadge">
+          <span class="badge">${driversCount} سائق</span>
+          <span class="badge">${paymentsCount} قبض</span>
+          <span class="badge" style="background:${runningBalance >= 0 ? 'rgba(72,187,120,0.3)' : 'rgba(255,71,87,0.3)'};">الرصيد: ${money(runningBalance)}</span>
+        </div>
+      </div>
+      <div class="monthBody ${isExpanded ? '' : 'collapsed'}" id="body-${inv.id}">
+        <div class="subTitle drivers">السواق (الوصولات)</div>
+        ${driversHTML}
+
+        <div class="subTitle payments">القبوضات (المدفوعات)</div>
+        ${paymentsHTML}
+
+        <div class="monthSummary">
+          <table>
+            <tr class="summRow prev">
+              <td><strong>${idx === 0 ? 'الرصيد السابق (القديم):' : 'الرصيد من الشهر السابق:'}</strong></td>
+              <td style="color:var(--accent1);">${money(prevBalance)}</td>
+            </tr>
+            <tr class="summRow plus">
+              <td><strong>+ مجموع السواق (وصولات):</strong></td>
+              <td style="color:var(--teal);">+${money(invReceipts)}</td>
+            </tr>
+            <tr class="summRow minus">
+              <td><strong>- مجموع القبوضات (مدفوعات):</strong></td>
+              <td style="color:var(--red);">-${money(invPayments)}</td>
+            </tr>
+            <tr class="summRow total">
+              <td><strong>= الرصيد بعد هذا الشهر:</strong></td>
+              <td>${money(runningBalance)}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="actionBtns">
+          <button class="miniBtn add" onclick="openAddModal('${inv.id}')">+ إضافة سائق / قبض</button>
+          <button class="miniBtn del" onclick="deleteMonth('${inv.id}')">حذف هذا الشهر</button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  document.getElementById('kpiOldBal').textContent = money(oldBalance);
+  document.getElementById('kpiReceipts').textContent = money(totalReceipts);
+  document.getElementById('kpiPayments').textContent = money(totalPayments);
+  document.getElementById('kpiFinal').textContent = money(runningBalance);
+  document.getElementById('pillBalance').textContent = money(runningBalance);
+
+  const finalBox = document.getElementById('kpiFinalBox');
+  if (runningBalance >= 0) {
+    finalBox.className = 'kpi good';
+  } else {
+    finalBox.className = 'kpi warn';
+  }
+}
+
+function toggleMonth(invId) {
+  const body = document.getElementById(`body-${invId}`);
+  if (body.classList.contains('collapsed')) {
+    body.classList.remove('collapsed');
+    expandedMonths[invId] = true;
+  } else {
+    body.classList.add('collapsed');
+    expandedMonths[invId] = false;
+  }
+}
+
+function expandAll() {
+  allInvoices.forEach(inv => { expandedMonths[inv.id] = true; });
+  render();
+}
+
+function collapseAll() {
+  allInvoices.forEach(inv => { expandedMonths[inv.id] = false; });
+  render();
+}
+
+function setView() {}
+
+async function createNewMonth() {
+  const note = document.getElementById('newMonthNote').value.trim();
+  const date = document.getElementById('newMonthDate').value;
+
+  if (!note) {
+    alert('الرجاء إدخال اسم الشهر');
+    return;
+  }
+  if (!clientId) {
+    alert('الرجاء اختيار عميل أولاً');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/invoices', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId, note, date: date || new Date().toISOString().split('T')[0] })
+    });
+    if (res.ok) {
+      document.getElementById('newMonthNote').value = '';
+      document.getElementById('newMonthDate').value = '';
+      await loadData();
+    } else { alert('خطأ في إنشاء الشهر'); }
+  } catch (e) { console.error(e); alert('خطأ في الاتصال'); }
+}
+
+async function savePrevBalance() {
+  const val = parseFloat(document.getElementById('prevBalanceInput').value) || 0;
+  oldBalance = val;
+  try {
+    await fetch(`/api/clients/${clientId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldBalance: val })
+    });
+    render();
+  } catch (e) { console.error(e); }
+}
+
+async function deleteMonth(invoiceId) {
+  if (!confirm('هل تريد حذف هذا الشهر؟ السواق والقبوضات ستبقى مسجلة لكن ستفصل عن هذا الشهر.')) return;
+  try {
+    const res = await fetch(`/api/invoices/${invoiceId}`, { method: 'DELETE' });
+    if (res.ok) await loadData();
+  } catch (e) { console.error(e); }
+}
+
+function openAddModal(invoiceId) {
+  currentAddInvoiceId = invoiceId;
+  const inv = allInvoices.find(i => i.id === invoiceId);
+  document.getElementById('addModalTitle').textContent = `إضافة إلى: ${inv?.note || invoiceId}`;
+  switchAddTab('driver');
+  document.getElementById('addDriverName').value = '';
+  document.getElementById('addDriverCar').value = '';
+  document.getElementById('addDriverCity').value = '';
+  document.getElementById('addDriverDate').value = '';
+  document.getElementById('addDriverAmount').value = '1250';
+  document.getElementById('addPayNote').value = '';
+  document.getElementById('addPayDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('addPayAmount').value = '';
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('open');
+  currentAddInvoiceId = null;
+}
+
+function switchAddTab(type) {
+  currentAddType = type;
+  document.getElementById('tabAddDriver').classList.toggle('active', type === 'driver');
+  document.getElementById('tabAddPayment').classList.toggle('active', type === 'payment');
+  document.getElementById('driverFields').style.display = type === 'driver' ? 'block' : 'none';
+  document.getElementById('paymentFields').style.display = type === 'payment' ? 'block' : 'none';
+}
+
+async function saveAddItem() {
+  if (!currentAddInvoiceId || !clientId) return;
+
+  try {
+    if (currentAddType === 'driver') {
+      const name = document.getElementById('addDriverName').value.trim();
+      const car = document.getElementById('addDriverCar').value.trim();
+      const city = document.getElementById('addDriverCity').value.trim();
+      const date = document.getElementById('addDriverDate').value.trim();
+      const amount = parseFloat(document.getElementById('addDriverAmount').value) || 0;
+
+      if (!name) { alert('الرجاء إدخال اسم السائق'); return; }
+      if (amount <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
+
+      const res = await fetch('/api/drivers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, invoiceId: currentAddInvoiceId, name, car, city, date, amount })
+      });
+      if (!res.ok) { alert('خطأ في إضافة السائق'); return; }
+
+      document.getElementById('addDriverName').value = '';
+      document.getElementById('addDriverCar').value = '';
+      document.getElementById('addDriverCity').value = '';
+      document.getElementById('addDriverAmount').value = '1250';
+      closeAddModal();
+    } else {
+      const note = document.getElementById('addPayNote').value.trim() || 'دفعة';
+      const date = document.getElementById('addPayDate').value;
+      const amount = parseFloat(document.getElementById('addPayAmount').value) || 0;
+
+      if (amount <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
+
+      const res = await fetch('/api/payments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, invoiceId: currentAddInvoiceId, note, date, amount })
+      });
+      if (!res.ok) { alert('خطأ في إضافة القبض'); return; }
+
+      document.getElementById('addPayNote').value = '';
+      document.getElementById('addPayAmount').value = '';
+      closeAddModal();
+    }
+
+    await loadData();
+  } catch (e) { console.error(e); alert('خطأ في الاتصال'); }
+}
+
+document.getElementById('addModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('addModal')) closeAddModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAddModal();
+});
+
+localStorage.setItem('currentClient', clientId);
+loadData();
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html" class="active"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
