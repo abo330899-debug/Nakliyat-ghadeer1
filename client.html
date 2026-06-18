@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>العملاء | شركة الغدير للنقل والتخليص الكمركي</title>
+
+<link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+<link rel="apple-touch-icon" href="assets/ghadeer-logo.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+
+<style>
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.client-card {
+  position: relative;
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: slideUp 0.4s ease forwards;
+  opacity: 0;
+}
+
+.client-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232,178,48,0.3);
+  box-shadow: 0 8px 30px rgba(232,178,48,0.15);
+}
+
+.client-card.removing {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.2s ease;
+}
+
+.client-header { display: flex; align-items: center; gap: 12px; }
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent1), var(--teal));
+  color: var(--bg1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(232,178,48,0.3);
+}
+
+.client-info { min-width: 0; }
+.client-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  -webkit-text-fill-color: var(--text);
+}
+.client-info p { margin: 2px 0; color: var(--textSoft); font-size: 0.85rem; }
+.client-info small { color: var(--textMuted); font-size: 0.8rem; }
+
+.details-btns {
+  display: none;
+  margin-top: 1rem;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.details-btns button {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  border: none;
+  border-radius: var(--radiusSm);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  transition: 0.3s;
+  box-shadow: 0 3px 10px rgba(232,178,48,0.2);
+}
+
+.details-btns button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(232,178,48,0.3);
+}
+
+.delete-dot {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  color: #fff;
+  font-weight: 900;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,71,87,0.3);
+  transition: 0.3s;
+}
+
+.delete-dot:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(255,71,87,0.4);
+}
+
+@media (max-width: 768px) {
+  .client-grid { grid-template-columns: 1fr !important; }
+  .client-header { flex-direction: column; text-align: center; gap: 8px; }
+  .avatar { width: 55px !important; height: 55px !important; }
+  .client-info { text-align: center; }
+  .details-btns { flex-direction: column; }
+  .details-btns button { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+    <div class="brand-info">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn trash" type="button" id="trashBtn">السلة</button>
+    <button class="btn back" type="button" onclick="window.location.href='home.html'">رجوع</button>
+  </div>
+</header>
+
+<main>
+  <div class="search-bar">
+    <input type="text" id="searchBox" placeholder="🔍 ابحث عن عميل...">
+  </div>
+
+  <form class="add-form" id="addClientForm">
+    <h3>➕ إضافة عميل جديد</h3>
+    <input type="text" id="clientName" placeholder="👤 اسم العميل" required>
+    <input type="text" id="clientPhone" placeholder="📞 رقم الهاتف (اختياري)">
+    <input type="text" id="clientCompany" placeholder="🏢 اسم الشركة (اختياري)">
+    <input type="number" id="clientOldBalance" placeholder="💰 الحساب القديم (اختياري)" step="0.01" min="0">
+    <button class="btn" type="submit">حفظ العميل</button>
+  </form>
+
+  <div id="clientGrid" class="client-grid"></div>
+</main>
+
+<footer>
+  زاخو – إبراهيم الخليل | 07504084359 | starzeki001@gmail.com
+  <br>© 2026 شركة الغدير للنقل والتخليص الكمركي – جميع الحقوق محفوظة
+</footer>
+
+<!-- Confirm Modal -->
+<div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div id="confirmTitle">تأكيد الحذف</div>
+      <button type="button" id="confirmClose" aria-label="إغلاق">×</button>
+    </div>
+    <div class="modal-body" id="confirmText"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-no" id="confirmNo">لا</button>
+      <button type="button" class="btn-yes" id="confirmYes">نعم</button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ DB Layer -->
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html" class="active"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+<script src="assets/js/ghadeer-db.js"></script>
+
+<script>
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+function q(v){ return encodeURIComponent(String(v ?? "")); }
+
+/* ✅ escape for passing inside single quotes in onclick */
+function jsSingle(v){
+  return String(v ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+}
+function toDomId(id){
+  return "c_" + encodeURIComponent(String(id ?? "")).replace(/%/g, "_");
+}
+
+/* ===== Confirm Modal ===== */
+const modal = document.getElementById("confirmModal");
+const confirmText = document.getElementById("confirmText");
+const btnYes = document.getElementById("confirmYes");
+const btnNo = document.getElementById("confirmNo");
+const btnClose = document.getElementById("confirmClose");
+
+let pendingYes = null;
+
+function openConfirm(message, onYes){
+  confirmText.textContent = message;
+  pendingYes = onYes;
+  modal.classList.add("open");
+  btnYes.focus();
+}
+function closeConfirm(){
+  modal.classList.remove("open");
+  pendingYes = null;
+}
+btnNo.addEventListener("click", closeConfirm);
+btnClose.addEventListener("click", closeConfirm);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeConfirm(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeConfirm(); });
+btnYes.addEventListener("click", () => {
+  const fn = pendingYes;
+  closeConfirm();
+  if (typeof fn === "function") fn();
+});
+
+/* ===== Data ===== */
+let clients = [];
+
+async function reloadClients(){
+  try {
+    clients = await window.GhadeerDB.getClientsAsync();
+    clients = clients.slice().sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  } catch(e) {
+    console.error('Error loading clients:', e);
+    clients = [];
+  }
+}
+
+async function renderClients(){
+  await reloadClients();
+
+  const grid = document.getElementById("clientGrid");
+  const search = document.getElementById("searchBox").value.toLowerCase().trim();
+  grid.innerHTML = "";
+
+  clients
+    .filter(c => (c.name || "").toLowerCase().includes(search))
+    .forEach((c) => {
+      const domId = toDomId(c.id);
+      const firstLetter = (c.name || "").trim().charAt(0) || "؟";
+
+      const safeName = escapeHtml(c.name);
+      const safeCompany = escapeHtml(c.company || "—");
+      const safePhone = escapeHtml(c.phone || "-");
+      const safeIdText = escapeHtml(c.id);
+      const oldBalance = c.oldBalance || 0;
+
+      const cid = jsSingle(c.id);
+
+      grid.innerHTML += `
+        <div class="client-card" onclick="toggleButtons('${domId}')">
+
+          <button class="delete-dot" title="حذف"
+            onclick="event.stopPropagation(); requestDelete('${cid}', this)">×</button>
+
+          <div class="client-header">
+            <div class="avatar">${escapeHtml(firstLetter)}</div>
+            <div class="client-info">
+              <h3>${safeName}</h3>
+              <p>${safeCompany}</p>
+              <small>📞 ${safePhone}</small>
+              ${oldBalance > 0 ? `<div style="margin-top:4px;color:#c9a227;font-weight:800;">💰 حساب قديم: $${oldBalance.toLocaleString()}</div>` : ''}
+            </div>
+          </div>
+
+          <div class="details-btns" id="btns-${domId}">
+            <button onclick="event.stopPropagation(); openPayments('${cid}')">💰 قبوضات</button>
+            <button onclick="event.stopPropagation(); openDrivers('${cid}')">🚚 السواق</button>
+            <button onclick="event.stopPropagation(); openStatement('${cid}')">📊 كشف تفصيلي</button>
+          </div>
+        </div>`;
+    });
+}
+
+/* ✅ toggle correct */
+function toggleButtons(domId){
+  const btns = document.getElementById(`btns-${domId}`);
+  if (!btns) return;
+
+  const wasOpen = btns.style.display === "flex";
+  document.querySelectorAll(".details-btns").forEach(el => el.style.display = "none");
+  btns.style.display = wasOpen ? "none" : "flex";
+}
+
+/* ===== Navigation ===== */
+function setCurrentClient(clientId){
+  localStorage.setItem("currentClient", clientId);
+}
+function openInvoiceDetails(clientId){
+  setCurrentClient(clientId);
+  window.location.href = `client-statement.html?client=${q(clientId)}`;
+}
+function openPayments(clientId){
+  setCurrentClient(clientId);
+  window.location.href = `payments.html?client=${q(clientId)}`;
+}
+function openAccount(clientId){
+  setCurrentClient(clientId);
+  window.location.href = `client-account.html?client=${q(clientId)}`;
+}
+function openStatement(clientId){
+  setCurrentClient(clientId);
+  window.location.href = `client-statement.html?client=${q(clientId)}`;
+}
+function openDrivers(clientId){
+  setCurrentClient(clientId);
+  window.location.href = `drivers.html?client=${q(clientId)}`;
+}
+
+/* ===== Delete ===== */
+function requestDelete(clientId, btnEl){
+  const c = clients.find(x => String(x.id) === String(clientId));
+  if (!c) return;
+
+  openConfirm(`هل تريد حذف العميل "${c.name}"؟\n(سيتم نقله إلى سلة المحذوفات)`, async () => {
+    const card = btnEl?.closest?.(".client-card");
+    if (card) card.classList.add("removing");
+
+    setTimeout(async () => {
+      try {
+        await window.GhadeerDB.deleteClientByIdAsync(clientId);
+      } catch(e) {
+        console.error('Error deleting client:', e);
+      }
+      await renderClients();
+    }, 180);
+  });
+}
+
+/* ===== Trash (prompt) ===== */
+function getTrash(){
+  return JSON.parse(localStorage.getItem(window.GhadeerDB.KEYS.TRASH) || "[]");
+}
+function setTrash(list){
+  localStorage.setItem(window.GhadeerDB.KEYS.TRASH, JSON.stringify(list));
+}
+function restoreClientFromTrash(index){
+  const trash = getTrash();
+  const item = trash[index];
+  if (!item || item.type !== "client") return alert("اختيار غير صحيح.");
+
+  const ok = confirm(`✅ استرجاع العميل "${item.data.name}"؟`);
+  if (!ok) return;
+
+  const clientsNow = window.GhadeerDB.getClients();
+  const exists = clientsNow.some(c => String(c.id) === String(item.data.id));
+  if (!exists){
+    clientsNow.push(item.data);
+    localStorage.setItem(window.GhadeerDB.KEYS.CLIENTS, JSON.stringify(clientsNow));
+  }
+
+  trash.splice(index, 1);
+  setTrash(trash);
+
+  renderClients();
+  alert("✅ تم الاسترجاع بنجاح.");
+}
+function permanentlyDeleteFromTrash(index){
+  const trash = getTrash();
+  const item = trash[index];
+  if (!item) return;
+
+  const ok = confirm(`⚠️ حذف نهائي من السلة؟`);
+  if (!ok) return;
+
+  trash.splice(index, 1);
+  setTrash(trash);
+  alert("✅ تم الحذف النهائي.");
+}
+function openTrash(){
+  const trash = getTrash().filter(x => x && x.type === "client");
+  if (!trash.length) return alert("🧺 السلة فارغة.");
+
+  const lines = trash.map((t, i) => `${i+1}) ${t.data.name} (${t.data.id})`).join("\n");
+  const pick = prompt(
+    `🧺 سلة العملاء:\n${lines}\n\n` +
+    `اكتب رقم للاسترجاع، أو DEL-رقم للحذف النهائي (مثال: DEL-2)`
+  );
+  if (!pick) return;
+
+  if (/^DEL-\d+$/i.test(pick.trim())){
+    const n = parseInt(pick.trim().split("-")[1], 10) - 1;
+    return permanentlyDeleteFromTrash(n);
+  }
+  const n = parseInt(pick.trim(), 10) - 1;
+  restoreClientFromTrash(n);
+}
+
+/* ===== Add ===== */
+document.getElementById("addClientForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("clientName").value.trim();
+  const phone = document.getElementById("clientPhone").value.trim();
+  const company = document.getElementById("clientCompany").value.trim();
+  const oldBalance = parseFloat(document.getElementById("clientOldBalance").value) || 0;
+
+  if (!name) return alert("الرجاء إدخال اسم العميل");
+
+  try{
+    const c = await window.GhadeerDB.addClientAsync({ name, phone, company, oldBalance });
+    await renderClients();
+    e.target.reset();
+    alert(`✅ تمت إضافة العميل "${c.name}" بنجاح (ID: ${c.id}).`);
+  }catch(err){
+    alert("خطأ: " + (err?.message || "غير معروف"));
+  }
+});
+
+document.getElementById("searchBox").addEventListener("input", () => renderClients());
+document.getElementById("trashBtn").addEventListener("click", openTrash);
+
+renderClients();
+</script>
+</body>
+</html>
