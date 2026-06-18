@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كشف الحساب العام | شركة الغدير للنقل والتخليص الكمركي</title>
+<link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+<style>
+main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  width: 95%;
+}
+
+h2 {
+  text-align: center;
+  padding-bottom: 10px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 2px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent1), var(--teal));
+}
+.summary-card .label {
+  font-size: 0.9rem;
+  color: var(--textSoft);
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+.summary-card .value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text);
+}
+.summary-card .value.green { color: var(--teal); }
+.summary-card .value.red { color: var(--red); }
+.summary-card .value.blue { color: var(--blue2); }
+
+.section {
+  background: var(--cardBg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.section h3 {
+  color: var(--accent1);
+  border-bottom: 1px solid var(--cardBorder);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radiusSm);
+  border: 1px solid var(--cardBorder);
+}
+table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid var(--glass);
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 800;
+}
+th {
+  background: var(--glass2);
+  color: var(--accent1);
+  font-weight: 900;
+}
+tr:hover td { background: var(--glass); }
+
+.client-row {
+  cursor: pointer;
+  transition: 0.3s;
+}
+.client-row:hover td { background: var(--glass) !important; }
+
+.positive { color: var(--teal); font-weight: 900; }
+.negative { color: var(--red); font-weight: 900; }
+
+footer {
+  background: var(--glass);
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid var(--cardBorder);
+  color: var(--textMuted);
+  font-size: .95rem;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.filters input {
+  padding: 8px 12px;
+  border: 1px solid var(--cardBorder);
+  border-radius: var(--radiusSm);
+  background: var(--glass);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+.filters input:focus {
+  border-color: var(--accent1);
+  outline: none;
+}
+.filters button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radiusSm);
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+}
+.btn-apply {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: var(--bg1);
+  box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+}
+.btn-clear {
+  background: var(--glass2);
+  color: var(--text);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--textMuted);
+}
+</style>
+</head>
+<body>
+
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+    <div class="brand-name">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">الرئيسية</a></li>
+      <li><a href="client.html">العملاء</a></li>
+      <li><a href="client-statement.html">الوصولات</a></li>
+      <li><a href="expenses.html">المصروفات</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">الرئيسية</a>
+      <a href="client.html">العملاء</a>
+      <a href="client-statement.html">الوصولات</a>
+      <a href="expenses.html">المصروفات</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <h2>كشف الحساب العام</h2>
+
+  <div class="filters">
+    <label style="color:var(--textSoft);font-weight:800;">من: <input type="date" id="fromDate"></label>
+    <label style="color:var(--textSoft);font-weight:800;">إلى: <input type="date" id="toDate"></label>
+    <button class="btn-apply" onclick="loadData()">بحث</button>
+    <button class="btn-clear" onclick="clearFilters()">مسح</button>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="label">عدد العملاء</div>
+      <div class="value blue" id="totalClients">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">إجمالي المدين (الفواتير)</div>
+      <div class="value green" id="totalDebit">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">إجمالي الدائن (المدفوعات)</div>
+      <div class="value red" id="totalCredit">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">صافي الرصيد</div>
+      <div class="value" id="netBalance">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">إجمالي المصروفات</div>
+      <div class="value red" id="totalExpenses">0</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">الربح الصافي</div>
+      <div class="value" id="netProfit">0</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>كشف حساب العملاء</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم العميل</th>
+            <th>اسم العميل</th>
+            <th>الشركة</th>
+            <th>إجمالي المدين</th>
+            <th>إجمالي الدائن</th>
+            <th>الرصيد</th>
+          </tr>
+        </thead>
+        <tbody id="clientsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>المصروفات</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم</th>
+            <th>العنوان</th>
+            <th>التصنيف</th>
+            <th>التاريخ</th>
+            <th>المبلغ</th>
+          </tr>
+        </thead>
+        <tbody id="expensesTable"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  زاخو – إبراهيم الخليل | 07504084359 | starzeki001@gmail.com  
+  <br>© 2026 شركة الغدير للنقل والتخليص الكمركي – جميع الحقوق محفوظة
+</footer>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+function esc(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+function money(n) {
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n || 0);
+}
+
+function clearFilters() {
+  document.getElementById('fromDate').value = '';
+  document.getElementById('toDate').value = '';
+  loadData();
+}
+
+async function loadData() {
+  const fromDate = document.getElementById('fromDate').value;
+  const toDate = document.getElementById('toDate').value;
+
+  try {
+    const [clients, invoices, payments, expenses] = await Promise.all([
+      window.GhadeerDB.getClientsAsync(),
+      window.GhadeerDB.getInvoicesAsync(),
+      window.GhadeerDB.getPaymentsAsync(),
+      window.GhadeerDB.getExpensesAsync()
+    ]);
+
+    let filteredInvoices = invoices;
+    let filteredPayments = payments;
+    let filteredExpenses = expenses;
+
+    if (fromDate) {
+      filteredInvoices = filteredInvoices.filter(i => i.date >= fromDate);
+      filteredPayments = filteredPayments.filter(p => p.date >= fromDate);
+      filteredExpenses = filteredExpenses.filter(e => e.date >= fromDate);
+    }
+    if (toDate) {
+      filteredInvoices = filteredInvoices.filter(i => i.date <= toDate);
+      filteredPayments = filteredPayments.filter(p => p.date <= toDate);
+      filteredExpenses = filteredExpenses.filter(e => e.date <= toDate);
+    }
+
+    const clientData = clients.map(client => {
+      const clientInvoices = filteredInvoices.filter(i => i.clientId === client.id);
+      const clientPayments = filteredPayments.filter(p => p.clientId === client.id);
+      const debit = clientInvoices.reduce((sum, i) => sum + (i.amount || 0), 0);
+      const credit = clientPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+      const balance = debit - credit;
+      return { ...client, debit, credit, balance };
+    });
+
+    const totalDebit = clientData.reduce((sum, c) => sum + c.debit, 0);
+    const totalCredit = clientData.reduce((sum, c) => sum + c.credit, 0);
+    const netBalance = totalDebit - totalCredit;
+    const totalExpenses = filteredExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+    const netProfit = netBalance - totalExpenses;
+
+    document.getElementById('totalClients').textContent = clients.length;
+    document.getElementById('totalDebit').textContent = money(totalDebit);
+    document.getElementById('totalCredit').textContent = money(totalCredit);
+    
+    const netBalEl = document.getElementById('netBalance');
+    netBalEl.textContent = money(netBalance);
+    netBalEl.className = 'value ' + (netBalance >= 0 ? 'green' : 'red');
+
+    document.getElementById('totalExpenses').textContent = money(totalExpenses);
+    
+    const netProfitEl = document.getElementById('netProfit');
+    netProfitEl.textContent = money(netProfit);
+    netProfitEl.className = 'value ' + (netProfit >= 0 ? 'green' : 'red');
+
+    const clientsTable = document.getElementById('clientsTable');
+    if (clientData.length === 0) {
+      clientsTable.innerHTML = '<tr><td colspan="6" style="padding:20px;color:var(--textMuted);">لا يوجد عملاء</td></tr>';
+    } else {
+      clientsTable.innerHTML = clientData.map(c => `
+        <tr class="client-row" onclick="location.href='client-account.html?client=${encodeURIComponent(c.id)}'">
+          <td>${esc(c.id)}</td>
+          <td>${esc(c.name)}</td>
+          <td>${esc(c.company) || '—'}</td>
+          <td class="positive">${money(c.debit)}</td>
+          <td class="negative">${money(c.credit)}</td>
+          <td class="${c.balance >= 0 ? 'positive' : 'negative'}">${money(c.balance)}</td>
+        </tr>
+      `).join('');
+    }
+
+    const expensesTable = document.getElementById('expensesTable');
+    if (filteredExpenses.length === 0) {
+      expensesTable.innerHTML = '<tr><td colspan="5" style="padding:20px;color:var(--textMuted);">لا توجد مصروفات</td></tr>';
+    } else {
+      expensesTable.innerHTML = filteredExpenses.map(e => `
+        <tr>
+          <td>${esc(e.id)}</td>
+          <td>${esc(e.title) || '—'}</td>
+          <td>${esc(e.category) || '—'}</td>
+          <td>${esc(e.date) || '—'}</td>
+          <td class="negative">${money(e.amount)}</td>
+        </tr>
+      `).join('');
+    }
+
+  } catch(err) {
+    console.error('Error loading data:', err);
+    alert('حدث خطأ في تحميل البيانات');
+  }
+}
+
+loadData();
+
+document.getElementById('menuToggle')?.addEventListener('click', () => {
+  document.getElementById('mobileMenu')?.classList.toggle('open');
+});
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
