@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>جميع العمليات | شركة الغدير</title>
+  <link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <style>
+    main { max-width: 1200px; margin: 1rem auto; padding: 1rem; }
+
+    h2 {
+      text-align: center;
+      padding-bottom: 10px;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      border-radius: 2px;
+    }
+
+    .filters-panel {
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .filters-panel label {
+      font-weight: 900;
+      color: var(--textSoft);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .filters-panel input, .filters-panel select {
+      width: 100%;
+      height: 42px;
+      border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    .filters-panel input:focus, .filters-panel select:focus {
+      border-color: var(--accent1);
+      outline: none;
+    }
+    .filters-panel .btn {
+      height: 42px;
+      border-radius: var(--radiusSm);
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      transition: 0.3s;
+      font-family: inherit;
+    }
+    .btn-search {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1);
+      box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+    .btn-clear { background: var(--glass2); color: var(--text); }
+    .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 900;
+      transition: 0.3s;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+    .tab-btn:hover:not(.active) { background: var(--glass2); }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .op-card {
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .op-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(0,0,0,0.3); }
+    .op-card.invoice { border-right: 4px solid var(--blue2); }
+    .op-card.payment { border-right: 4px solid var(--teal); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .card-type {
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 900;
+    }
+    .type-inv { background: rgba(99,179,237,0.15); color: var(--blue2); }
+    .type-pay { background: rgba(72,187,120,0.15); color: var(--teal); }
+
+    .card-id { font-family: monospace; font-weight: 900; color: var(--textMuted); }
+    .card-client { font-size: 1.1rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .card-note { color: var(--textSoft); font-size: 0.9rem; margin-bottom: 8px; }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--cardBorder);
+    }
+    .card-date { color: var(--textMuted); font-size: 0.85rem; }
+    .card-amount { font-size: 1.2rem; font-weight: 900; }
+    .card-amount.inv { color: var(--blue2); }
+    .card-amount.pay { color: var(--teal); }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--textMuted);
+      font-weight: 900;
+    }
+
+    .summary-bar {
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .summary-item { text-align: center; }
+    .summary-item .label { font-size: 0.85rem; color: var(--textSoft); font-weight: 800; }
+    .summary-item .value { font-size: 1.3rem; font-weight: 900; }
+    .summary-item .value.inv { color: var(--blue2); }
+    .summary-item .value.pay { color: var(--teal); }
+
+    footer {
+      background: var(--glass);
+      text-align: center;
+      padding: 1rem;
+      color: var(--textMuted);
+      border-top: 1px solid var(--cardBorder);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+<header class="main-header">
+  <div class="brand">
+    <img src="assets/ghadeer-logo.png" alt="logo">
+    <div class="brand-name">
+      <span>شركة الغدير</span>
+      <small>للنقل والتخليص الكمركي</small>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">الرئيسية</a></li>
+      <li><a href="client.html">العملاء</a></li>
+      <li><a href="client-statement.html">الوصولات</a></li>
+      <li><a href="expenses.html">المصروفات</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">الرئيسية</a>
+      <a href="client.html">العملاء</a>
+      <a href="client-statement.html">الوصولات</a>
+      <a href="expenses.html">المصروفات</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <h2>جميع الوصولات والقبوضات</h2>
+
+  <div class="filters-panel">
+    <div>
+      <label>بحث بالاسم</label>
+      <input type="text" id="searchName" placeholder="اسم العميل...">
+    </div>
+    <div>
+      <label>من تاريخ</label>
+      <input type="date" id="fromDate">
+    </div>
+    <div>
+      <label>إلى تاريخ</label>
+      <input type="date" id="toDate">
+    </div>
+    <div>
+      <button class="btn btn-search" onclick="applyFilters()">بحث</button>
+    </div>
+    <div>
+      <button class="btn btn-clear" onclick="clearFilters()">مسح</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">الكل</button>
+    <button class="tab-btn" data-tab="invoices" onclick="switchTab('invoices')">الوصولات</button>
+    <button class="tab-btn" data-tab="payments" onclick="switchTab('payments')">القبوضات</button>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-item">
+      <div class="label">عدد العمليات</div>
+      <div class="value" id="countAll">0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">مجموع الوصولات</div>
+      <div class="value inv" id="sumInv">$0</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">مجموع القبوضات</div>
+      <div class="value pay" id="sumPay">$0</div>
+    </div>
+  </div>
+
+  <div id="loadingMsg" style="text-align:center;padding:20px;font-weight:900;color:var(--textMuted);">جاري التحميل...</div>
+
+  <div class="cards-grid" id="cardsContainer"></div>
+</main>
+
+<footer>زاخو – إبراهيم الخليل | 07504084359 | starzeki001@gmail.com</footer>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+  function esc(str) {
+    if (str == null) return '';
+    const d = document.createElement('div');
+    d.textContent = String(str);
+    return d.innerHTML;
+  }
+  function money(n) { return '$' + Number(n || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+
+  let allClients = [];
+  let allInvoices = [];
+  let allPayments = [];
+  let currentTab = 'all';
+
+  async function loadData() {
+    try {
+      allClients = await window.GhadeerDB.getClientsAsync();
+      allInvoices = await window.GhadeerDB.getInvoicesAsync();
+      allPayments = await window.GhadeerDB.getPaymentsAsync();
+      document.getElementById('loadingMsg').style.display = 'none';
+      render();
+    } catch (e) {
+      console.error('Error loading data:', e);
+      document.getElementById('loadingMsg').textContent = 'خطأ في تحميل البيانات: ' + e.message;
+    }
+  }
+
+  function getClientName(clientId) {
+    const c = allClients.find(x => String(x.id) === String(clientId));
+    return c?.name || clientId;
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    render();
+  }
+
+  function applyFilters() { render(); }
+
+  function clearFilters() {
+    document.getElementById('searchName').value = '';
+    document.getElementById('fromDate').value = '';
+    document.getElementById('toDate').value = '';
+    render();
+  }
+
+  function render() {
+    const searchName = document.getElementById('searchName').value.trim().toLowerCase();
+    const fromDate = document.getElementById('fromDate').value;
+    const toDate = document.getElementById('toDate').value;
+
+    let invoices = allInvoices.map(inv => ({
+      ...inv,
+      _type: 'invoice',
+      _clientName: getClientName(inv.clientId),
+      _ts: new Date(inv.date || inv.createdAt).getTime()
+    }));
+
+    let payments = allPayments.map(pay => ({
+      ...pay,
+      _type: 'payment',
+      _clientName: getClientName(pay.clientId),
+      _ts: new Date(pay.date || pay.createdAt).getTime()
+    }));
+
+    if (searchName) {
+      invoices = invoices.filter(x => x._clientName.toLowerCase().includes(searchName));
+      payments = payments.filter(x => x._clientName.toLowerCase().includes(searchName));
+    }
+
+    if (fromDate) {
+      const fromTs = new Date(fromDate).getTime();
+      invoices = invoices.filter(x => x._ts >= fromTs);
+      payments = payments.filter(x => x._ts >= fromTs);
+    }
+
+    if (toDate) {
+      const toTs = new Date(toDate).getTime() + 86400000;
+      invoices = invoices.filter(x => x._ts < toTs);
+      payments = payments.filter(x => x._ts < toTs);
+    }
+
+    let items = [];
+    if (currentTab === 'all') {
+      items = [...invoices, ...payments];
+    } else if (currentTab === 'invoices') {
+      items = invoices;
+    } else {
+      items = payments;
+    }
+
+    items.sort((a, b) => b._ts - a._ts);
+
+    const sumInv = invoices.reduce((s, x) => s + Number(x.amount || 0), 0);
+    const sumPay = payments.reduce((s, x) => s + Number(x.amount || 0), 0);
+
+    document.getElementById('countAll').textContent = items.length;
+    document.getElementById('sumInv').textContent = money(sumInv);
+    document.getElementById('sumPay').textContent = money(sumPay);
+
+    const container = document.getElementById('cardsContainer');
+    if (!items.length) {
+      container.innerHTML = '<div class="empty-state">لا توجد عمليات</div>';
+      return;
+    }
+
+    container.innerHTML = items.map(item => {
+      const isInv = item._type === 'invoice';
+      return `
+        <div class="op-card ${isInv ? 'invoice' : 'payment'}" onclick="openClient('${item.clientId}')">
+          <div class="card-header">
+            <span class="card-type ${isInv ? 'type-inv' : 'type-pay'}">${isInv ? 'وصل' : 'قبض'}</span>
+            <span class="card-id">${esc(item.id)}</span>
+          </div>
+          <div class="card-client">${esc(item._clientName)}</div>
+          <div class="card-note">${esc(item.note) || '—'}</div>
+          <div class="card-footer">
+            <span class="card-date">${esc(item.date) || '—'}</span>
+            <span class="card-amount ${isInv ? 'inv' : 'pay'}">${money(item.amount)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openClient(clientId) {
+    window.location.href = `client-account.html?client=${encodeURIComponent(clientId)}`;
+  }
+
+  loadData();
+
+  document.getElementById('menuToggle')?.addEventListener('click', () => {
+    document.getElementById('mobileMenu')?.classList.toggle('open');
+  });
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
