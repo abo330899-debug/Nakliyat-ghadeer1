@@ -1,0 +1,233 @@
+import os
+import io
+from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+import arabic_reshaper
+from bidi.algorithm import get_display
+from datetime import datetime
+
+# إعداد التطبيق
+app = Flask(__name__, static_folder='.', static_url_path='')
+CORS(app)
+
+# إعداد قاعدة البيانات
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ghadeer.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# تسجيل الخطوط
+pdfmetrics.registerFont(TTFont('DejaVuSans', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
+pdfmetrics.registerFont(TTFont('DejaVuSans-Bold', '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'))
+
+# نموذج تجريبي
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(200))
+    phone = db.Column(db.String(100))
+
+    def to_dict(self):
+        return {
+            'clientId': self.client_id,
+            'name': self.name,
+            'phone': self.phone,
+        }
+
+with app.app_context():
+    db.create_all()
+
+# تحويل النص العربي
+def arabic_text(text):
+    if not text:
+        return ''
+    reshaped = arabic_reshaper.reshape(str(text))
+    return get_display(reshaped)
+
+# 🧾 توليد PDF حديث باسم الشركة
+@app.route('/api/client-pdf/<client_id>', methods=['POST'])
+def generate_client_pdf(client_id):
+    try:
+        data = request.get_json() or {}
+        client_name = data.get('clientName', 'عميل')
+        client_phone = data.get('clientPhone', '')
+        receipts = data.get('receipts', [])
+
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=25, leftMargin=25, topMargin=25, bottomMargin=25)
+
+        # 🎨 ألوان وهوية بصرية
+        primary = colors.HexColor("#0A2239")   # أزرق ملكي غامق
+        gold = colors.HexColor("#FFD700")      # ذهبي
+        soft_gray = colors.HexColor("#F7F9FC") # خلفية الجداول
+        border = colors.HexColor("#DADADA")
+
+        elements = []
+
+        # 🏷️ رأس الصفحة
+        logo_data = [[
+            arabic_text("●"),
+            arabic_text("شركة غدير للنقل والتخليص الكمركي"),
+            ""
+        ]]
+        logo_table = Table(logo_data, colWidths=[20, 380, 140])
+        logo_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TEXTCOLOR', (0, 0), (-1, -1), gold),
+            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSans-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 18),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ]))
+        elements.append(logo_table)
+
+        header_line = Table([['']], colWidths=[540])
+        header_line.setStyle(TableStyle([
+            ('LINEBELOW', (0, 0), (-1, -1), 2, gold)
+        ]))
+        elements.append(header_line)
+        elements.append(Spacer(1, 15))
+
+        # 📄 العنوان الرئيسي
+        title = Table([[arabic_text("كشف حساب عميل")]], colWidths=[540])
+        title.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, -1), primary),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.white),
+            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSans-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 16),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ]))
+        elements.append(title)
+        elements.append(Spacer(1, 20))
+
+        # 🧾 معلومات العميل
+        info_data = [
+            [arabic_text("اسم العميل"), arabic_text(client_name)],
+            [arabic_text("رقم الهاتف"), arabic_text(client_phone or "-")],
+            [arabic_text("التاريخ"), arabic_text(datetime.now().strftime("%Y-%m-%d"))],
+        ]
+        info_table = Table(info_data, colWidths=[150, 370])
+        info_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, -1), soft_gray),
+            ('BOX', (0, 0), (-1, -1), 1, border),
+            ('INNERGRID', (0, 0), (-1, -1), 0.5, border),
+            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSans'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
+            ('TEXTCOLOR', (0, 0), (-1, -1), primary),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ]))
+        elements.append(info_table)
+        elements.append(Spacer(1, 20))
+
+        # 📊 بيانات السواقين والمدفوعات
+        total_drivers = 0
+        total_payments = 0
+        for receipt in receipts:
+            drivers = receipt.get('drivers', [])
+            payments = receipt.get('payments', [])
+
+            if drivers:
+                driver_data = [[arabic_text('المبلغ'), arabic_text('المحافظة'), arabic_text('السيارة'),
+                                arabic_text('السائق'), arabic_text('التاريخ'), arabic_text('#')]]
+                for i, d in enumerate(drivers, 1):
+                    driver_data.append([
+                        f"${d.get('amount', 0):,.2f}",
+                        arabic_text(d.get('city', '')),
+                        d.get('car', ''),
+                        arabic_text(d.get('name', '')),
+                        d.get('date', ''),
+                        str(i)
+                    ])
+                    total_drivers += d.get('amount', 0)
+
+                driver_table = Table(driver_data, colWidths=[80, 90, 70, 130, 100, 40])
+                driver_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), gold),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), primary),
+                    ('FONTNAME', (0, 0), (-1, 0), 'DejaVuSans-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 10),
+                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, soft_gray]),
+                    ('BOX', (0, 0), (-1, -1), 1, border),
+                    ('INNERGRID', (0, 0), (-1, -1), 0.4, border),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ]))
+                elements.append(driver_table)
+                elements.append(Spacer(1, 12))
+
+            if payments:
+                payment_data = [[arabic_text('المبلغ'), arabic_text('الوصف'),
+                                 arabic_text('التاريخ'), arabic_text('#')]]
+                for i, p in enumerate(payments, 1):
+                    payment_data.append([
+                        f"${p.get('amount', 0):,.2f}",
+                        arabic_text(p.get('description', '')),
+                        p.get('date', ''),
+                        str(i)
+                    ])
+                    total_payments += p.get('amount', 0)
+
+                payment_table = Table(payment_data, colWidths=[100, 270, 120, 40])
+                payment_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), primary),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                    ('FONTNAME', (0, 0), (-1, 0), 'DejaVuSans-Bold'),
+                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, soft_gray]),
+                    ('BOX', (0, 0), (-1, -1), 1, border),
+                    ('INNERGRID', (0, 0), (-1, -1), 0.4, border),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ]))
+                elements.append(payment_table)
+                elements.append(Spacer(1, 12))
+
+        # 💰 الملخص النهائي
+        final_balance = total_drivers - total_payments
+        summary_data = [
+            [arabic_text("إجمالي السواقين"), f"${total_drivers:,.2f}"],
+            [arabic_text("إجمالي المدفوعات"), f"${total_payments:,.2f}"],
+            [arabic_text("الرصيد النهائي"), f"${final_balance:,.2f}"],
+        ]
+        summary_table = Table(summary_data, colWidths=[250, 290])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 2), (-1, 2), gold),
+            ('TEXTCOLOR', (0, 2), (-1, 2), primary),
+            ('FONTNAME', (0, 2), (-1, 2), 'DejaVuSans-Bold'),
+            ('BOX', (0, 0), (-1, -1), 1, border),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ]))
+        elements.append(summary_table)
+        elements.append(Spacer(1, 20))
+
+        # 🪶 تذييل الصفحة
+        footer = Table([[arabic_text("شكراً لتعاملكم مع شركة غدير للنقل والتخليص الكمركي")]], colWidths=[540])
+        footer.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('TEXTCOLOR', (0, 0), (-1, -1), gold),
+            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSans'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ]))
+        elements.append(footer)
+
+        doc.build(elements)
+        buffer.seek(0)
+        return send_file(buffer, mimetype='application/pdf', as_attachment=True,
+                         download_name=f'ghadeer_statement_{client_id}.pdf')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/')
+def home():
+    return "🚚 Ghadeer Transport & Customs Clearance API Running!"
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
