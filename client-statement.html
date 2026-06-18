@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>كشف حساب تفصيلي | شركة الغدير للنقل والتخليص الكمركي</title>
+
+  <link rel="icon" type="image/png" href="assets/ghadeer-logo.png">
+  <link rel="apple-touch-icon" href="assets/ghadeer-logo.png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/mobile.css">
+  <style>
+    .app{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 14px;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      min-height: calc(100vh - 80px);
+    }
+    @media (max-width: 1100px){
+      .app{ grid-template-columns: 1fr; }
+    }
+
+    .side{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      overflow:hidden;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 80px - 28px);
+      display:flex;
+      flex-direction:column;
+    }
+    @media (max-width: 1100px){
+      .side{ position: relative; height:auto; top:auto; }
+    }
+
+    .sideHead{
+      padding: 14px;
+      border-bottom: 1px solid var(--cardBorder);
+      background: var(--glass);
+    }
+
+    .brandRow{ display:flex; align-items:center; gap:12px; }
+    .logo{
+      width:44px; height:44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent1), var(--teal));
+      display:flex; align-items:center; justify-content:center;
+      color: var(--bg1);
+      font-weight:900;
+      font-size: 1.2rem;
+      flex:0 0 auto;
+      box-shadow: 0 4px 12px rgba(232,178,48,0.3);
+    }
+    .brandText b{
+      display:block;
+      font-size: .95rem;
+      font-weight: 900;
+      color: var(--accent1);
+    }
+    .brandText span{
+      display:block;
+      color: var(--textSoft);
+      font-weight: 700;
+      font-size: .78rem;
+      margin-top:2px;
+    }
+
+    .pillRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .pill{
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      border-radius: 999px;
+      padding:6px 10px;
+      font-weight:900;
+      font-size:.76rem;
+      color: var(--textSoft);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .pill b{ color: var(--accent1); }
+    .pill.good b{ color: var(--teal); }
+
+    .sideBlock{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--cardBorder);
+    }
+    .label{
+      color: var(--textMuted);
+      font-size: .76rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+
+    .field{
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      border-radius: var(--radiusSm);
+      height: 40px;
+      padding: 8px 10px;
+      font-weight: 800;
+      outline:none;
+      font-family: inherit;
+    }
+    .field:focus{
+      border-color: var(--accent1);
+      box-shadow: 0 0 0 3px rgba(232,178,48,0.12);
+    }
+
+    .btnRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+      padding: 12px 14px;
+    }
+    @media (max-width: 420px){ .btnRow{ grid-template-columns: 1fr; } }
+
+    .btn{
+      height: 40px;
+      border-radius: var(--radiusSm);
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--text);
+      font-weight: 900;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition: 0.3s;
+      font-size: .85rem;
+      font-family: inherit;
+    }
+    .btn:hover{
+      transform: translateY(-2px);
+      background: var(--glass2);
+      box-shadow: 0 4px 15px rgba(232,178,48,0.1);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg1);
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(232,178,48,0.3);
+    }
+    .btn.danger{
+      background: var(--glass);
+      color: var(--red);
+      border-color: rgba(255,71,87,0.3);
+    }
+    .btn.danger:hover{
+      background: rgba(255,71,87,0.1);
+    }
+
+    .sideFooter{
+      margin-top:auto;
+      padding: 12px 14px;
+      color: var(--textMuted);
+      font-weight: 700;
+      font-size: .74rem;
+      line-height: 1.7;
+      border-top: 1px solid var(--cardBorder);
+      background: var(--glass);
+      text-align: center;
+    }
+
+    .main{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .topbar{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 14px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap: wrap;
+    }
+
+    .tbTitle{
+      margin:0;
+      font-size: 1.1rem;
+      font-weight: 900;
+      padding-bottom: 6px;
+      display:inline-block;
+      border-bottom: 3px solid var(--accent1);
+    }
+    .tbSub{
+      margin-top: 8px;
+      color: var(--textSoft);
+      font-size: .82rem;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .tbRight{
+      min-width: 280px;
+      display:grid;
+      gap:8px;
+    }
+    @media (max-width: 980px){
+      .tbRight{ width:100%; min-width:0; }
+    }
+    .tbRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      border:1px solid var(--cardBorder);
+      border-radius: var(--radiusSm);
+      padding: 8px 10px;
+      background: var(--glass);
+      align-items:center;
+    }
+    .tbRow span{
+      color: var(--textSoft);
+      font-weight: 900;
+      font-size: .76rem;
+    }
+    .tbRow b{ font-weight: 900; color: var(--accent1); }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+    .tab{
+      border:1px solid var(--cardBorder);
+      background: var(--glass);
+      color: var(--textSoft);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 900;
+      font-size: .80rem;
+      cursor:pointer;
+      transition: .3s;
+    }
+    .tab:hover{ background: var(--glass2); color: var(--accent1); }
+    .tab.active{
+      border-color: var(--accent1);
+      background: rgba(232,178,48,0.1);
+      color: var(--accent1);
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 980px){ .summary{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px){ .summary{ grid-template-columns: 1fr; } }
+
+    .kpi{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--teal));
+    }
+    .kpi .k{
+      color: var(--textSoft);
+      font-weight: 900;
+      font-size: .80rem;
+    }
+    .kpi .v{
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--blue2);
+    }
+    .kpi.warn::before{ background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
+    .kpi.warn .v{ color: var(--accent1); }
+    .kpi.good::before{ background: linear-gradient(90deg, var(--teal), var(--teal2)); }
+    .kpi.good .v{ color: var(--teal); }
+    .kpi.bad::before{ background: linear-gradient(90deg, var(--red), var(--red2)); }
+    .kpi.bad .v{ color: var(--red); }
+
+    .card{
+      background: var(--cardBg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      padding: 14px;
+      transition: 0.3s;
+    }
+    .card:hover{ border-color: rgba(232,178,48,0.2); }
+
+    .cardHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .tableWrap{
+      overflow:auto;
+      border-radius: var(--radiusSm);
+      border: 1px solid var(--cardBorder);
+      background: var(--glass);
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 700px;
+      font-size: .80rem;
+    }
+    th, td{
+      border-bottom: 1px solid var(--glass);
+      padding: 10px;
+      text-align:center;
+      font-weight: 800;
+      color: var(--text);
+    }
+    thead th{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--glass2);
+      font-size: .76rem;
+      color: var(--accent1);
+      border-bottom: 2px solid var(--cardBorder);
+    }
+    tbody tr:hover{ background: var(--glass); }
+
+    tfoot td{
+      background: var(--glass2);
+      border-top: 2px solid var(--cardBorder);
+      font-weight: 900;
+      color: var(--accent1);
+    }
+
+    .formRow{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr) auto;
+      gap:8px;
+      margin-top:10px;
+      align-items:center;
+    }
+    @media (max-width: 900px){ .formRow{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px){ .formRow{ grid-template-columns: 1fr; } }
+
+    .section{ display:none; }
+    .section.active{ display:block; }
+
+    .watermark{
+      position: fixed;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 60px;
+      font-weight: 900;
+      color: rgba(255,255,255,.02);
+      transform: rotate(-18deg);
+      pointer-events:none;
+      user-select:none;
+      z-index: 0;
+    }
+
+    @media print{
+      header.main-header{ display:none !important; }
+      .side{ display:none !important; }
+      button, .btn, .btnRow, .tools, .formRow, .tabs, .tab, input, select{ display:none !important; }
+      body{ background:#fff !important; color:#000 !important; }
+      body::before{ display:none !important; }
+      .app{ display:block !important; padding:0 !important; max-width:100% !important; }
+      .topbar, .kpi, .card, .tableWrap{
+        box-shadow:none !important;
+        border:1px solid #ccc !important;
+        background:#fff !important;
+        backdrop-filter:none !important;
+      }
+      table{ min-width:0 !important; }
+      thead th{ position: static !important; background:#f5f5f5 !important; color:#000 !important; }
+      td, th, .tbTitle, h1, h2, h3, .kpi .k, .kpi .v, .tbRow b, .tbRow span { 
+        color:#000 !important; 
+        -webkit-text-fill-color:#000 !important; 
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="main-header">
+    <div class="brand">
+      <img src="assets/ghadeer-logo.png" alt="ghadeer logo">
+      <div class="brand-name">
+        <span>شركة الغدير</span>
+        <small>للنقل والتخليص الكمركي</small>
+      </div>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="home.html">الرئيسية</a></li>
+        <li><a href="client.html">العملاء</a></li>
+        <li><a href="client-statement.html" class="active">الوصولات</a></li>
+        <li><a href="expenses.html">المصروفات</a></li>
+      </ul>
+
+      <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="home.html">الرئيسية</a>
+        <a href="client.html">العملاء</a>
+        <a href="client-statement.html">الوصولات</a>
+        <a href="expenses.html">المصروفات</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="watermark">شركة الغدير</div>
+
+  <div class="app">
+
+    <aside class="side">
+      <div class="sideHead">
+        <div class="brandRow">
+          <div class="logo" id="clientInitial">?</div>
+          <div class="brandText">
+            <b id="sideClientName">اسم العميل</b>
+            <span>كشف حساب تفصيلي</span>
+          </div>
+        </div>
+
+        <div class="pillRow">
+          <div class="pill">التاريخ: <b id="dateNow">—</b></div>
+          <div class="pill good">حفظ تلقائي</div>
+        </div>
+      </div>
+
+    
+
+      <div class="sideBlock">
+        <div class="label">فترة التقرير</div>
+        <div class="grid2">
+          <input id="periodFrom" class="field" type="date">
+          <input id="periodTo" class="field" type="date">
+        </div>
+      </div>
+
+      <div class="btnRow">
+        <button class="btn" type="button" onclick="window.print()">طباعة</button>
+        <button class="btn primary" type="button" onclick="exportPDF()">PDF</button>
+        <button class="btn" type="button" onclick="goBack()">رجوع</button>
+        <button class="btn danger" type="button" onclick="resetData()">مسح</button>
+      </div>
+
+      <div class="sideFooter">
+        شركة الغدير للنقل والتخليص الكمركي<br>
+        زاخو – إبراهيم الخليل
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="tbLeft">
+          <h1 class="tbTitle" id="pageTitle">كشف حساب العميل</h1>
+          <div class="tbSub">
+            عرض تفصيلي للوصولات والقبوضات مع حساب الرصيد النهائي تلقائياً
+          </div>
+
+          <div class="tabs">
+            <div class="tab active" data-tab="receipts" onclick="switchTab('receipts')">الوصولات (السواق)</div>
+            <div class="tab" data-tab="payments" onclick="switchTab('payments')">القبوضات (المدفوعات)</div>
+            <div class="tab" data-tab="invoices" onclick="switchTab('invoices')">فواتير العميل</div>
+            <div class="tab" data-tab="report" onclick="switchTab('report')">ملخص الحساب</div>
+          </div>
+        </div>
+
+        <div class="tbRight">
+          <div class="tbRow" style="margin-bottom:10px;">
+            <span>اختر العميل:</span>
+            <select id="clientSelector" class="field" style="min-width:180px;padding:8px;font-size:14px;" onchange="changeClient(this.value)">
+              <option value="">— اختر عميل —</option>
+            </select>
+          </div>
+          <div class="tbRow">
+            <span>الهاتف:</span>
+            <b id="tbClientPhone">—</b>
+          </div>
+          <div class="tbRow">
+            <span>الشركة:</span>
+            <b id="tbClientCompany">—</b>
+          </div>
+        </div>
+      </header>
+
+      <div class="summary">
+        <div class="kpi good">
+          <div class="k">الرصيد النهائي</div>
+          <div class="v" id="kpiOldBalance">$0.00</div>
+        </div>
+        <div class="kpi">
+          <div class="k">مجموع الوصولات</div>
+          <div class="v" id="kpiReceipts">$0.00</div>
+        </div>
+        <div class="kpi bad">
+          <div class="k">مجموع القبوضات</div>
+          <div class="v" id="kpiPayments">$0.00</div>
+        </div>
+        <div class="kpi good">
+          <div class="k">الرصيد النهائي</div>
+          <div class="v" id="kpiFinal">$0.00</div>
+        </div>
+      </div>
+
+      <section class="section active" id="secReceipts">
+        <div class="card">
+          <div class="cardHead">
+            <h2>الوصولات (السواق)</h2>
+          </div>
+
+          <div class="tableWrap">
+            <table id="tblReceipts">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>التاريخ</th>
+                  <th>اسم السائق</th>
+                  <th>السيارة</th>
+                  <th>المحافظة</th>
+                  <th>المبلغ</th>
+                </tr>
+              </thead>
+              <tbody id="receiptsBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">المجموع</td>
+                  <td id="receiptsTotal">$0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="secPayments">
+        <div class="card">
+          <div class="cardHead">
+            <h2>القبوضات (المدفوعات)</h2>
+          </div>
+
+          <div class="tableWrap">
+            <table id="tblPayments">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>التاريخ</th>
+                  <th>الوصف</th>
+                  <th>المبلغ</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">المجموع</td>
+                  <td id="paymentsTotal">$0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="secInvoices">
+        <div class="card">
+          <div class="cardHead">
+            <h2>فواتير العميل</h2>
+            <button class="btn primary" onclick="openNewInvoiceModal()">+ فاتورة جديدة</button>
+          </div>
+
+          <div id="invoicesContainer"></div>
+
+          <div class="tableWrap" style="margin-top:20px;">
+            <table>
+              <thead>
+                <tr style="background:var(--glass2);">
+                  <th colspan="2" style="color:var(--accent1);">ملخص الفواتير التراكمي</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:rgba(232,178,48,0.06);">
+                  <td>الحساب القديم</td>
+                  <td id="invOldBalance" style="color:var(--accent1);">$0.00</td>
+                </tr>
+                <tr style="background:rgba(0,209,178,0.06);">
+                  <td>+ إجمالي الوصولات (كل الفواتير)</td>
+                  <td id="invTotalReceipts" style="color:var(--teal);">$0.00</td>
+                </tr>
+                <tr style="background:rgba(255,71,87,0.06);">
+                  <td>- إجمالي القبوضات (كل الفواتير)</td>
+                  <td id="invTotalPayments" style="color:var(--red);">$0.00</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="background:linear-gradient(135deg,var(--accent1),var(--accent2));color:var(--bg1);font-size:1.1em;">
+                  <td><strong>= الرصيد النهائي</strong></td>
+                  <td id="invFinalBalance"><strong>$0.00</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="secReport">
+        <div class="card">
+          <div class="cardHead">
+            <h2>ملخص الحساب النهائي</h2>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>البيان</th>
+                  <th>المبلغ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>الحساب القديم (الرصيد السابق)</td>
+                  <td id="repOldBalance">$0.00</td>
+                </tr>
+                <tr>
+                  <td>+ مجموع الوصولات (السواق)</td>
+                  <td id="repReceipts">$0.00</td>
+                </tr>
+                <tr>
+                  <td>= إجمالي المطلوب</td>
+                  <td id="repTotal">$0.00</td>
+                </tr>
+                <tr>
+                  <td>- مجموع القبوضات (المدفوعات)</td>
+                  <td id="repPayments">$0.00</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>الرصيد النهائي المستحق</td>
+                  <td id="repFinal">$0.00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+<div id="invoiceModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+  <div class="modal-content" style="background:var(--bg2);padding:25px;border-radius:16px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;border:1px solid var(--cardBorder);">
+    <h3 style="margin-bottom:15px;color:var(--accent1);">فاتورة جديدة</h3>
+    <div style="margin-bottom:15px;">
+      <label>اسم/وصف الفاتورة:</label>
+      <input type="text" id="invoiceNote" class="field" placeholder="مثال: فاتورة شهر يناير" style="width:100%;padding:10px;">
+    </div>
+    <div style="margin-bottom:15px;">
+      <label>التاريخ:</label>
+      <input type="date" id="invoiceDate" class="field" style="width:100%;padding:10px;">
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn" onclick="closeInvoiceModal()">إلغاء</button>
+      <button class="btn primary" onclick="createInvoice()">إنشاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="addToInvoiceModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+  <div class="modal-content" style="background:var(--bg2);padding:25px;border-radius:16px;max-width:600px;width:95%;max-height:85vh;overflow-y:auto;border:1px solid var(--cardBorder);">
+    <h3 style="margin-bottom:15px;color:var(--accent1);" id="addToInvoiceTitle">إضافة إلى الفاتورة</h3>
+    <div id="addDriverSection" style="margin-bottom:20px;padding:15px;background:var(--glass);border-radius:12px;border:1px solid var(--cardBorder);">
+      <h4 style="margin-bottom:10px;">إضافة وصل (سائق)</h4>
+      <div style="display:grid;gap:10px;">
+        <input type="text" id="newDriverName" class="field" placeholder="اسم السائق" style="padding:10px;">
+        <input type="text" id="newDriverCar" class="field" placeholder="رقم السيارة" style="padding:10px;">
+        <input type="text" id="newDriverCity" class="field" placeholder="المحافظة" style="padding:10px;">
+        <input type="date" id="newDriverDate" class="field" style="padding:10px;">
+        <input type="number" id="newDriverAmount" class="field" placeholder="المبلغ" step="0.01" style="padding:10px;">
+        <button class="btn primary" onclick="addDriverToInvoice()">إضافة الوصل</button>
+      </div>
+    </div>
+    <div id="addPaymentSection" style="margin-bottom:20px;padding:15px;background:var(--glass);border-radius:12px;border:1px solid var(--cardBorder);">
+      <h4 style="margin-bottom:10px;">إضافة قبض (دفعة)</h4>
+      <div style="display:grid;gap:10px;">
+        <input type="text" id="newPaymentNote" class="field" placeholder="وصف الدفعة" style="padding:10px;">
+        <input type="date" id="newPaymentDate" class="field" style="padding:10px;">
+        <input type="number" id="newPaymentAmount" class="field" placeholder="المبلغ" step="0.01" style="padding:10px;">
+        <button class="btn primary" onclick="addPaymentToInvoice()">إضافة القبض</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn" onclick="closeAddToInvoiceModal()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<div id="receiptActionModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+  <div class="modal-content" style="background:var(--bg2);padding:25px;border-radius:16px;max-width:500px;width:90%;border:1px solid var(--cardBorder);">
+    <h3 style="margin-bottom:15px;color:var(--accent1);">إدارة الوصل <span id="receiptActionId"></span></h3>
+    
+    <div id="receiptViewMode">
+      <div style="background:var(--glass);padding:15px;border-radius:12px;margin-bottom:15px;border:1px solid var(--cardBorder);">
+        <p><strong>اسم السائق:</strong> <span id="viewDriverName"></span></p>
+        <p><strong>السيارة:</strong> <span id="viewDriverCar"></span></p>
+        <p><strong>المحافظة:</strong> <span id="viewDriverCity"></span></p>
+        <p><strong>التاريخ:</strong> <span id="viewDriverDate"></span></p>
+        <p><strong>المبلغ:</strong> <span id="viewDriverAmount"></span></p>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn primary" onclick="switchToEditMode()">تعديل</button>
+        <button class="btn" style="background:#dc3545;color:#fff;" onclick="confirmDeleteReceipt()">حذف</button>
+        <button class="btn" onclick="closeReceiptActionModal()">إغلاق</button>
+      </div>
+    </div>
+    
+    <div id="receiptEditMode" style="display:none;">
+      <div style="display:grid;gap:10px;margin-bottom:15px;">
+        <div>
+          <label>اسم السائق:</label>
+          <input type="text" id="editDriverName" class="field" style="width:100%;padding:10px;">
+        </div>
+        <div>
+          <label>السيارة:</label>
+          <input type="text" id="editDriverCar" class="field" style="width:100%;padding:10px;">
+        </div>
+        <div>
+          <label>المحافظة:</label>
+          <input type="text" id="editDriverCity" class="field" style="width:100%;padding:10px;">
+        </div>
+        <div>
+          <label>التاريخ:</label>
+          <input type="date" id="editDriverDate" class="field" style="width:100%;padding:10px;">
+        </div>
+        <div>
+          <label>المبلغ:</label>
+          <input type="number" id="editDriverAmount" class="field" step="0.01" style="width:100%;padding:10px;">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn primary" onclick="saveReceiptEdit()">حفظ</button>
+        <button class="btn" onclick="cancelEditMode()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteConfirmModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;">
+  <div class="modal-content" style="background:var(--bg2);padding:25px;border-radius:16px;max-width:400px;width:90%;text-align:center;border:1px solid var(--cardBorder);">
+    <h3 style="margin-bottom:15px;color:var(--red);">تأكيد الحذف</h3>
+    <p style="margin-bottom:20px;">هل أنت متأكد من حذف هذا الوصل؟</p>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="btn primary" style="background:#dc3545;" onclick="executeDeleteReceipt()">نعم، احذف</button>
+      <button class="btn" onclick="closeDeleteConfirmModal()">لا، إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/ghadeer-db.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+let clientId = params.get('client') || localStorage.getItem('currentClient');
+
+let clientData = null;
+let allClients = [];
+let allDrivers = [];
+let allPayments = [];
+let allInvoices = [];
+let currentInvoiceId = null;
+let oldBalance = 0;
+
+function esc(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+document.getElementById('dateNow').textContent = new Date().toLocaleDateString('ar-IQ');
+
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+
+async function loadAllClients() {
+  try {
+    allClients = await window.GhadeerDB.getClientsAsync();
+    const selector = document.getElementById('clientSelector');
+    selector.innerHTML = '<option value="">— اختر عميل —</option>';
+    allClients.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name;
+      if (c.id === clientId) opt.selected = true;
+      selector.appendChild(opt);
+    });
+  } catch (e) {
+    console.error('Error loading clients:', e);
+  }
+}
+
+function changeClient(newClientId) {
+  if (!newClientId) return;
+  clientId = newClientId;
+  localStorage.setItem('currentClient', clientId);
+  const url = new URL(window.location.href);
+  url.searchParams.set('client', clientId);
+  window.history.pushState({}, '', url);
+  loadClientData();
+}
+
+async function loadClientData() {
+  await loadAllClients();
+  
+  if (!clientId) {
+    document.getElementById('sideClientName').textContent = 'اختر عميل';
+    document.getElementById('clientInitial').textContent = '?';
+    document.getElementById('tbClientPhone').textContent = '—';
+    document.getElementById('tbClientCompany').textContent = '—';
+    document.getElementById('pageTitle').textContent = 'كشف حساب العميل';
+    document.title = 'كشف حساب | شركة الغدير';
+    allDrivers = [];
+    allPayments = [];
+    allInvoices = [];
+    oldBalance = 0;
+    renderData();
+    renderInvoices();
+    return;
+  }
+
+  try {
+    clientData = allClients.find(c => c.id === clientId);
+    
+    if (!clientData) {
+      document.getElementById('sideClientName').textContent = 'عميل غير موجود';
+      document.getElementById('clientInitial').textContent = '?';
+      return;
+    }
+
+    document.getElementById('sideClientName').textContent = clientData.name;
+    document.getElementById('clientInitial').textContent = (clientData.name || '?').charAt(0);
+    document.getElementById('tbClientPhone').textContent = clientData.phone || '—';
+    document.getElementById('tbClientCompany').textContent = clientData.company || '—';
+    document.getElementById('pageTitle').textContent = `كشف حساب — ${clientData.name}`;
+    document.title = `كشف حساب — ${clientData.name} | شركة الغدير`;
+
+    oldBalance = clientData.oldBalance || 0;
+
+    const driversRes = await fetch(`/api/drivers?client=${encodeURIComponent(clientId)}`);
+    allDrivers = await driversRes.json();
+    
+    const paymentsRes = await fetch(`/api/payments?client=${encodeURIComponent(clientId)}`);
+    allPayments = await paymentsRes.json();
+
+    renderData();
+    loadInvoices();
+    
+  } catch (e) {
+    console.error('Error loading data:', e);
+    alert('خطأ في تحميل البيانات');
+  }
+}
+
+function renderData() {
+  const receiptsBody = document.getElementById('receiptsBody');
+  receiptsBody.innerHTML = '';
+  
+  let totalReceipts = 0;
+  allDrivers.forEach((d, i) => {
+    const amount = parseFloat(d.amount) || 0;
+    totalReceipts += amount;
+    receiptsBody.innerHTML += `
+      <tr style="cursor:pointer;" onclick="showReceiptActions('${esc(d.driver_id)}', ${i})">
+        <td style="color:var(--accent1);text-decoration:underline;">${esc(d.driver_id) || (i + 1)}</td>
+        <td>${esc(d.date) || '—'}</td>
+        <td>${esc(d.name) || '—'}</td>
+        <td>${esc(d.car) || '—'}</td>
+        <td>${esc(d.city) || '—'}</td>
+        <td>$${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+      </tr>
+    `;
+  });
+  
+  const paymentsBody = document.getElementById('paymentsBody');
+  paymentsBody.innerHTML = '';
+  
+  let totalPayments = 0;
+  allPayments.forEach((p, i) => {
+    const amount = parseFloat(p.amount) || 0;
+    totalPayments += amount;
+    paymentsBody.innerHTML += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${esc(p.date) || '—'}</td>
+        <td>${esc(p.description) || '—'}</td>
+        <td>$${amount.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+      </tr>
+    `;
+  });
+
+  const totalDue = oldBalance + totalReceipts;
+  const finalBalance = totalDue - totalPayments;
+
+  document.getElementById('receiptsTotal').textContent = `$${totalReceipts.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('paymentsTotal').textContent = `$${totalPayments.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+  document.getElementById('kpiOldBalance').textContent = `$${finalBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('kpiReceipts').textContent = `$${totalReceipts.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('kpiPayments').textContent = `$${totalPayments.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('kpiFinal').textContent = `$${finalBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+  document.getElementById('repOldBalance').textContent = `$${oldBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('repReceipts').textContent = `$${totalReceipts.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('repTotal').textContent = `$${totalDue.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('repPayments').textContent = `$${totalPayments.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('repFinal').textContent = `$${finalBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`sec${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+}
+
+async function applyPrevBalance(val) {
+  if (val === undefined) val = oldBalance;
+  oldBalance = val;
+  
+  try {
+    await fetch(`/api/clients/${clientId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldBalance: val })
+    });
+  } catch (e) {
+    console.error('Error saving old balance:', e);
+  }
+  
+  renderData();
+}
+
+function refreshTotals() {
+  renderData();
+}
+
+function goBack() {
+  window.location.href = `client.html`;
+}
+
+function resetData() {
+  if (confirm('هل تريد مسح الحساب القديم؟')) {
+    oldBalance = 0;
+    applyPrevBalance(0);
+  }
+}
+
+function openNewInvoiceModal() {
+  if (!clientId) {
+    alert('الرجاء اختيار عميل أولاً');
+    return;
+  }
+  document.getElementById('invoiceNote').value = '';
+  document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('invoiceModal').style.display = 'flex';
+}
+
+function closeInvoiceModal() {
+  document.getElementById('invoiceModal').style.display = 'none';
+}
+
+async function createInvoice() {
+  const note = document.getElementById('invoiceNote').value.trim();
+  const date = document.getElementById('invoiceDate').value;
+  
+  if (!note) {
+    alert('الرجاء إدخال اسم/وصف الفاتورة');
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/invoices', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: clientId,
+        note: note,
+        date: date
+      })
+    });
+    
+    if (res.ok) {
+      closeInvoiceModal();
+      loadInvoices();
+    } else {
+      alert('خطأ في إنشاء الفاتورة');
+    }
+  } catch (e) {
+    console.error('Error creating invoice:', e);
+    alert('خطأ في إنشاء الفاتورة');
+  }
+}
+
+async function loadInvoices() {
+  if (!clientId) {
+    allInvoices = [];
+    renderInvoices();
+    return;
+  }
+  
+  try {
+    const res = await fetch(`/api/invoices?clientId=${encodeURIComponent(clientId)}&full=true`);
+    allInvoices = await res.json();
+    renderInvoices();
+  } catch (e) {
+    console.error('Error loading invoices:', e);
+    allInvoices = [];
+    renderInvoices();
+  }
+}
+
+function renderInvoices() {
+  const container = document.getElementById('invoicesContainer');
+  container.innerHTML = '';
+  
+  let cumulativeReceipts = 0;
+  let cumulativePayments = 0;
+  let runningBalance = oldBalance;
+  
+  allInvoices.forEach((inv, idx) => {
+    const prevBalance = runningBalance;
+    const invReceipts = inv.totalReceipts || 0;
+    const invPayments = inv.totalPayments || 0;
+    
+    cumulativeReceipts += invReceipts;
+    cumulativePayments += invPayments;
+    runningBalance = prevBalance + invReceipts - invPayments;
+    
+    const invCard = document.createElement('div');
+    invCard.className = 'card';
+    invCard.style.marginBottom = '20px';
+    invCard.style.border = '1px solid var(--cardBorder)';
+    
+    let driversHTML = '';
+    if (inv.drivers && inv.drivers.length > 0) {
+      driversHTML = `
+        <table style="width:100%;margin-bottom:10px;">
+          <thead>
+            <tr style="background:var(--glass2);">
+              <th>#</th>
+              <th>التاريخ</th>
+              <th>اسم السائق</th>
+              <th>السيارة</th>
+              <th>المحافظة</th>
+              <th>المبلغ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${inv.drivers.map((d, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${esc(d.date) || '—'}</td>
+                <td>${esc(d.name) || '—'}</td>
+                <td>${esc(d.car) || '—'}</td>
+                <td>${esc(d.city) || '—'}</td>
+                <td>$${(d.amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background:rgba(0,209,178,0.1);">
+              <td colspan="5" style="color:var(--teal);">مجموع الوصولات</td>
+              <td style="color:var(--teal);">$${(inv.totalReceipts || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+    } else {
+      driversHTML = '<p style="color:#999;text-align:center;">لا توجد وصولات</p>';
+    }
+    
+    let paymentsHTML = '';
+    if (inv.payments && inv.payments.length > 0) {
+      paymentsHTML = `
+        <table style="width:100%;margin-bottom:10px;">
+          <thead>
+            <tr style="background:var(--glass2);">
+              <th>#</th>
+              <th>التاريخ</th>
+              <th>الوصف</th>
+              <th>المبلغ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${inv.payments.map((p, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${esc(p.date) || '—'}</td>
+                <td>${esc(p.note) || '—'}</td>
+                <td>$${(p.amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background:rgba(255,71,87,0.08);">
+              <td colspan="3" style="color:var(--red);">مجموع القبوضات</td>
+              <td style="color:var(--red);">$${(inv.totalPayments || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+    } else {
+      paymentsHTML = '<p style="color:#999;text-align:center;">لا توجد قبوضات</p>';
+    }
+    
+    invCard.innerHTML = `
+      <div class="cardHead" style="background:linear-gradient(135deg,var(--accent1),var(--accent2));color:var(--bg1);padding:15px;border-radius:12px 12px 0 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;width:100%;">
+          <div>
+            <h3 style="margin:0;">فاتورة #${idx + 1}: ${esc(inv.note) || 'بدون وصف'}</h3>
+            <small style="opacity:0.8;">التاريخ: ${esc(inv.date) || '—'} | رقم: ${esc(inv.id)}</small>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.3);" onclick="openAddToInvoiceModal('${inv.id}')">+ إضافة</button>
+            <button class="btn danger" style="background:rgba(255,71,87,0.3);color:#fff;border-color:rgba(255,71,87,0.4);" onclick="deleteInvoice('${inv.id}')">حذف</button>
+          </div>
+        </div>
+      </div>
+      <div style="padding:15px;">
+        <h4 style="color:var(--teal);margin-bottom:10px;">الوصولات (السواق)</h4>
+        ${driversHTML}
+        
+        <h4 style="color:var(--accent1);margin-bottom:10px;margin-top:20px;">القبوضات (المدفوعات)</h4>
+        ${paymentsHTML}
+        
+        <div style="margin-top:15px;padding:15px;background:var(--glass);border-radius:12px;border:2px solid var(--accent1);">
+          <table style="width:100%;">
+            <tr style="background:rgba(232,178,48,0.08);">
+              <td><strong>${idx === 0 ? 'الرصيد السابق:' : 'الرصيد النهائي السابق:'}</strong></td>
+              <td style="font-weight:bold;text-align:left;color:var(--accent1);">
+                $${prevBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}
+              </td>
+            </tr>
+            <tr style="background:rgba(0,209,178,0.08);">
+              <td><strong>+ مجموع وصولات السواق:</strong></td>
+              <td style="color:var(--teal);font-weight:bold;text-align:left;">
+                +$${invReceipts.toLocaleString('en-US', {minimumFractionDigits: 2})}
+              </td>
+            </tr>
+            <tr style="background:rgba(255,71,87,0.08);">
+              <td><strong>- مجموع القبوضات:</strong></td>
+              <td style="color:var(--red);font-weight:bold;text-align:left;">
+                -$${invPayments.toLocaleString('en-US', {minimumFractionDigits: 2})}
+              </td>
+            </tr>
+            <tr style="background:linear-gradient(135deg,var(--accent1),var(--accent2));color:var(--bg1);font-size:1.1em;">
+              <td><strong>= الرصيد بعد هذه الفاتورة:</strong></td>
+              <td style="font-weight:bold;text-align:left;">
+                $${runningBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(invCard);
+  });
+  
+  document.getElementById('invOldBalance').textContent = `$${oldBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('invTotalReceipts').textContent = `$${cumulativeReceipts.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('invTotalPayments').textContent = `$${cumulativePayments.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('invFinalBalance').textContent = `$${runningBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+}
+
+function openAddToInvoiceModal(invoiceId) {
+  currentInvoiceId = invoiceId;
+  const inv = allInvoices.find(i => i.id === invoiceId);
+  document.getElementById('addToInvoiceTitle').textContent = `إضافة إلى: ${inv?.note || invoiceId}`;
+  document.getElementById('newDriverName').value = '';
+  document.getElementById('newDriverCar').value = '';
+  document.getElementById('newDriverCity').value = '';
+  document.getElementById('newDriverDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('newDriverAmount').value = '';
+  document.getElementById('newPaymentNote').value = '';
+  document.getElementById('newPaymentDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('newPaymentAmount').value = '';
+  document.getElementById('addToInvoiceModal').style.display = 'flex';
+}
+
+function closeAddToInvoiceModal() {
+  document.getElementById('addToInvoiceModal').style.display = 'none';
+  currentInvoiceId = null;
+}
+
+async function addDriverToInvoice() {
+  if (!currentInvoiceId || !clientId) return;
+  
+  const name = document.getElementById('newDriverName').value.trim();
+  const car = document.getElementById('newDriverCar').value.trim();
+  const city = document.getElementById('newDriverCity').value.trim();
+  const date = document.getElementById('newDriverDate').value;
+  const amount = parseFloat(document.getElementById('newDriverAmount').value) || 0;
+  
+  if (!name) {
+    alert('الرجاء إدخال اسم السائق');
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/drivers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: clientId,
+        invoiceId: currentInvoiceId,
+        name: name,
+        car: car,
+        city: city,
+        date: date,
+        amount: amount
+      })
+    });
+    
+    if (res.ok) {
+      document.getElementById('newDriverName').value = '';
+      document.getElementById('newDriverCar').value = '';
+      document.getElementById('newDriverCity').value = '';
+      document.getElementById('newDriverAmount').value = '';
+      loadInvoices();
+      loadClientData();
+    } else {
+      alert('خطأ في إضافة الوصل');
+    }
+  } catch (e) {
+    console.error('Error adding driver:', e);
+    alert('خطأ في إضافة الوصل');
+  }
+}
+
+async function addPaymentToInvoice() {
+  if (!currentInvoiceId || !clientId) return;
+  
+  const note = document.getElementById('newPaymentNote').value.trim();
+  const date = document.getElementById('newPaymentDate').value;
+  const amount = parseFloat(document.getElementById('newPaymentAmount').value) || 0;
+  
+  if (amount <= 0) {
+    alert('الرجاء إدخال مبلغ صحيح');
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/payments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: clientId,
+        invoiceId: currentInvoiceId,
+        note: note || 'دفعة',
+        date: date,
+        amount: amount
+      })
+    });
+    
+    if (res.ok) {
+      document.getElementById('newPaymentNote').value = '';
+      document.getElementById('newPaymentAmount').value = '';
+      loadInvoices();
+      loadClientData();
+    } else {
+      alert('خطأ في إضافة القبض');
+    }
+  } catch (e) {
+    console.error('Error adding payment:', e);
+    alert('خطأ في إضافة القبض');
+  }
+}
+
+async function deleteInvoice(invoiceId) {
+  if (!confirm('هل تريد حذف هذه الفاتورة؟ الوصولات والقبوضات المرتبطة ستبقى موجودة لكن ستُفصل عن الفاتورة.')) return;
+  
+  try {
+    const res = await fetch(`/api/invoices/${invoiceId}`, {
+      method: 'DELETE'
+    });
+    
+    if (res.ok) {
+      loadInvoices();
+      loadClientData();
+    } else {
+      alert('خطأ في حذف الفاتورة');
+    }
+  } catch (e) {
+    console.error('Error deleting invoice:', e);
+    alert('خطأ في حذف الفاتورة');
+  }
+}
+
+async function exportPDF() {
+  try {
+    let runningBalance = oldBalance;
+    const receiptsForPDF = allInvoices.map(inv => {
+      const prevBalance = runningBalance;
+      const invReceipts = inv.totalReceipts || 0;
+      const invPayments = inv.totalPayments || 0;
+      runningBalance = prevBalance + invReceipts - invPayments;
+      return {
+        name: inv.note || inv.id,
+        date: inv.date || '',
+        previousBalance: prevBalance,
+        drivers: (inv.drivers || []).map(d => ({
+          date: d.date,
+          name: d.name,
+          car: d.car,
+          city: d.city,
+          amount: d.amount
+        })),
+        payments: (inv.payments || []).map(p => ({
+          date: p.date,
+          description: p.note || '',
+          amount: p.amount
+        }))
+      };
+    });
+    
+    const response = await fetch(`/api/client-pdf/${clientId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientName: clientData?.name || '',
+        clientPhone: clientData?.phone || '',
+        receipts: receiptsForPDF
+      })
+    });
+    
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `كشف_حساب_${clientData?.name || 'عميل'}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } else {
+      alert('خطأ في إنشاء PDF');
+    }
+  } catch (e) {
+    console.error('PDF Error:', e);
+    alert('خطأ في إنشاء PDF');
+  }
+}
+
+let currentReceiptId = null;
+let currentReceiptIndex = null;
+
+function showReceiptActions(driverId, index) {
+  currentReceiptId = driverId;
+  currentReceiptIndex = index;
+  const driver = allDrivers[index];
+  
+  if (!driver) return;
+  
+  document.getElementById('receiptActionId').textContent = driverId;
+  document.getElementById('viewDriverName').textContent = driver.name || '—';
+  document.getElementById('viewDriverCar').textContent = driver.car || '—';
+  document.getElementById('viewDriverCity').textContent = driver.city || '—';
+  document.getElementById('viewDriverDate').textContent = driver.date || '—';
+  document.getElementById('viewDriverAmount').textContent = `$${(parseFloat(driver.amount) || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  
+  document.getElementById('receiptViewMode').style.display = 'block';
+  document.getElementById('receiptEditMode').style.display = 'none';
+  document.getElementById('receiptActionModal').style.display = 'flex';
+}
+
+function closeReceiptActionModal() {
+  document.getElementById('receiptActionModal').style.display = 'none';
+  currentReceiptId = null;
+  currentReceiptIndex = null;
+}
+
+function switchToEditMode() {
+  const driver = allDrivers[currentReceiptIndex];
+  if (!driver) return;
+  
+  document.getElementById('editDriverName').value = driver.name || '';
+  document.getElementById('editDriverCar').value = driver.car || '';
+  document.getElementById('editDriverCity').value = driver.city || '';
+  document.getElementById('editDriverDate').value = driver.date || '';
+  document.getElementById('editDriverAmount').value = driver.amount || '';
+  
+  document.getElementById('receiptViewMode').style.display = 'none';
+  document.getElementById('receiptEditMode').style.display = 'block';
+}
+
+function cancelEditMode() {
+  document.getElementById('receiptViewMode').style.display = 'block';
+  document.getElementById('receiptEditMode').style.display = 'none';
+}
+
+async function saveReceiptEdit() {
+  if (!currentReceiptId) return;
+  
+  const name = document.getElementById('editDriverName').value.trim();
+  const car = document.getElementById('editDriverCar').value.trim();
+  const city = document.getElementById('editDriverCity').value.trim();
+  const date = document.getElementById('editDriverDate').value;
+  const amount = parseFloat(document.getElementById('editDriverAmount').value) || 0;
+  
+  try {
+    const res = await fetch(`/api/drivers/${currentReceiptId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, car, city, date, amount })
+    });
+    
+    if (res.ok) {
+      closeReceiptActionModal();
+      await loadClientData();
+      alert('تم تحديث الوصل بنجاح');
+    } else {
+      alert('خطأ في تحديث الوصل');
+    }
+  } catch (e) {
+    console.error('Error updating driver:', e);
+    alert('خطأ في تحديث الوصل');
+  }
+}
+
+function confirmDeleteReceipt() {
+  document.getElementById('deleteConfirmModal').style.display = 'flex';
+}
+
+function closeDeleteConfirmModal() {
+  document.getElementById('deleteConfirmModal').style.display = 'none';
+}
+
+async function executeDeleteReceipt() {
+  if (!currentReceiptId) return;
+  
+  try {
+    const res = await fetch(`/api/drivers/${currentReceiptId}`, {
+      method: 'DELETE'
+    });
+    
+    if (res.ok) {
+      closeDeleteConfirmModal();
+      closeReceiptActionModal();
+      await loadClientData();
+      alert('تم حذف الوصل بنجاح');
+    } else {
+      alert('خطأ في حذف الوصل');
+    }
+  } catch (e) {
+    console.error('Error deleting driver:', e);
+    alert('خطأ في حذف الوصل');
+  }
+}
+
+loadClientData();
+</script>
+
+<nav class="bottom-nav">
+  <a href="home.html"><span class="nav-icon">🏠</span>الرئيسية</a>
+  <a href="client.html"><span class="nav-icon">👥</span>العملاء</a>
+  <a href="client-account.html"><span class="nav-icon">📊</span>الحساب</a>
+  <a href="expenses.html"><span class="nav-icon">💰</span>المصروفات</a>
+  <a href="notes.html"><span class="nav-icon">📝</span>الملاحظات</a>
+</nav>
+
+</body>
+</html>
